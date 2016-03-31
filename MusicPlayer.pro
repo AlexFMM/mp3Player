@@ -18,3 +18,5 @@ SOURCES += main.cpp\
 HEADERS  += mainwindow.h
 
 FORMS    += mainwindow.ui
+
+QT += core gui multimedia

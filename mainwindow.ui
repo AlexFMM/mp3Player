@@ -13,6 +13,9 @@
   <property name="windowTitle">
    <string>MusicPlayer</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true"/>
+  </property>
   <property name="tabShape">
    <enum>QTabWidget::Rounded</enum>
   </property>
@@ -59,9 +62,9 @@
    <widget class="QListView" name="listNextSongs">
     <property name="geometry">
      <rect>
-      <x>590</x>
+      <x>580</x>
       <y>300</y>
-      <width>191</width>
+      <width>201</width>
       <height>91</height>
      </rect>
     </property>
@@ -93,6 +96,9 @@
     </property>
    </widget>
    <widget class="QProgressBar" name="songProgress">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>220</x>
@@ -101,19 +107,34 @@
       <height>10</height>
      </rect>
     </property>
+    <property name="mouseTracking">
+     <bool>false</bool>
+    </property>
+    <property name="autoFillBackground">
+     <bool>false</bool>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="minimum">
+     <number>1</number>
+    </property>
     <property name="value">
      <number>24</number>
     </property>
     <property name="textVisible">
      <bool>false</bool>
     </property>
+    <property name="invertedAppearance">
+     <bool>false</bool>
+    </property>
    </widget>
    <widget class="QPushButton" name="aleatorio">
     <property name="geometry">
      <rect>
-      <x>70</x>
+      <x>80</x>
       <y>370</y>
-      <width>75</width>
+      <width>51</width>
       <height>23</height>
      </rect>
     </property>
@@ -124,9 +145,9 @@
    <widget class="QPushButton" name="repetir">
     <property name="geometry">
      <rect>
-      <x>70</x>
+      <x>80</x>
       <y>310</y>
-      <width>75</width>
+      <width>51</width>
       <height>23</height>
      </rect>
     </property>
