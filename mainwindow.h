@@ -1,9 +1,13 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include <QString>
+
 #include <QMainWindow>
 #include <QMediaPlayer>
 #include <QPushButton>
+#include <QSlider>
+#include <QLabel>
 
 namespace Ui {
 class MainWindow;
@@ -19,11 +23,17 @@ public:
 
 private slots:
     void play();
+    void setVolume();
+    void setPosition();
 
 private:
     Ui::MainWindow *ui;
     QMediaPlayer *player;
     QPushButton *btn;
+    QSlider *vol;
+    QSlider *pos;
+    QLabel *curL;
+    QLabel *totL;
 
 };
 
