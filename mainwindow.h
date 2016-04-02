@@ -24,7 +24,9 @@ public:
 private slots:
     void play();
     void setVolume();
-    void setPosition();
+    void setBarPosition();
+    void setSongPosition();
+    void setEndTime();
 
 private:
     Ui::MainWindow *ui;

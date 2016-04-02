@@ -20,16 +20,21 @@ MainWindow::MainWindow(QWidget *parent) :
     totL = this->findChild<QLabel*>("totalTime");
     connect(btn,SIGNAL(clicked()),this,SLOT(play()));
     connect(vol,SIGNAL(valueChanged(int)), this, SLOT(setVolume()));
-    connect(player, SIGNAL(durationChanged(qint64)), this, SLOT(setPosition()));
+    connect(player, SIGNAL(durationChanged(qint64)), this, SLOT(setEndTime()));
+    connect(player, SIGNAL(positionChanged(qint64)), this, SLOT(setBarPosition()));
+    connect(pos, SIGNAL(sliderReleased()), this, SLOT(setSongPosition()));
+    //connect(pos, SIGNAL(), this, SLOT());
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete player;
+    delete btn;
     delete vol;
     delete pos;
-    delete btn;
-    delete player;
+    delete curL;
+    delete totL;
 }
 
 void MainWindow::play(){
@@ -53,11 +58,37 @@ void MainWindow::setVolume(){
     player->setVolume(vol->value());
 }
 
-void MainWindow::setPosition(){
+void MainWindow::setEndTime(){
     int duration = player->duration();
-    curL->setText( QString::number(duration));
     int seconds = (duration/1000) % 60;
     int minutes = (duration/60000) % 60;
-    QString time = QString::number(minutes) + ":" +  QString::number(seconds);
+    QString time;
+    if(seconds < 10)
+        time = QString::number(minutes) + ":0" +  QString::number(seconds);
+    else
+        time = QString::number(minutes) + ":" +  QString::number(seconds);
     totL->setText(time);
+    pos->setMaximum(duration);
+}
+
+void MainWindow::setBarPosition(){
+    int duration = player->duration();
+    if(duration == 0)
+        return;
+    int position = player->position();
+    int seconds = (position/1000) % 60;
+    int minutes = (position/60000) % 60;
+    QString time;
+    if(seconds < 10)
+        time = QString::number(minutes) + ":0" +  QString::number(seconds);
+    else
+        time = QString::number(minutes) + ":" +  QString::number(seconds);
+    curL->setText(time);
+    pos->setValue(position);
+}
+
+void MainWindow::setSongPosition(){
+    player->pause();
+    player->setPosition(pos->value());
+    player->play();
 }
