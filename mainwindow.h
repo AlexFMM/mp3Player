@@ -24,7 +24,11 @@ public:
 private slots:
     void play();
     void setVolume();
-    void setPosition();
+    void setBarPosition();
+    void setSongPosition();
+    void movingSlider();
+    void setEndTime();
+    void songEnd();
 
 private:
     Ui::MainWindow *ui;
@@ -34,6 +38,7 @@ private:
     QSlider *pos;
     QLabel *curL;
     QLabel *totL;
+    bool moving;
 
 };
 
