@@ -18,12 +18,14 @@ MainWindow::MainWindow(QWidget *parent) :
     pos = this->findChild<QSlider*>("songPosition");
     curL = this->findChild<QLabel*>("currentTime");
     totL = this->findChild<QLabel*>("totalTime");
+    moving = false;
     connect(btn,SIGNAL(clicked()),this,SLOT(play()));
     connect(vol,SIGNAL(valueChanged(int)), this, SLOT(setVolume()));
     connect(player, SIGNAL(durationChanged(qint64)), this, SLOT(setEndTime()));
     connect(player, SIGNAL(positionChanged(qint64)), this, SLOT(setBarPosition()));
     connect(pos, SIGNAL(sliderReleased()), this, SLOT(setSongPosition()));
-    //connect(pos, SIGNAL(), this, SLOT());
+    connect(pos, SIGNAL(sliderMoved(int)), this, SLOT(movingSlider()));
+    connect(player, SIGNAL(stateChanged(QMediaPlayer::State)), this, SLOT(songEnd()));
 }
 
 MainWindow::~MainWindow()
@@ -47,7 +49,7 @@ void MainWindow::play(){
         btn->setText("Pause");
     }
     else{
-        player->setMedia(QUrl::fromLocalFile("C:/Users/alexf/Music/These_Days-Foo_Fighters.mp3"));
+        player->setMedia(QUrl::fromLocalFile("C:/Users/alex/Music/The_Hunter-Mastodon.mp3"));
         player->setVolume(vol->value());
         player->play();
         btn->setText("Pause");
@@ -62,11 +64,15 @@ void MainWindow::setEndTime(){
     int duration = player->duration();
     int seconds = (duration/1000) % 60;
     int minutes = (duration/60000) % 60;
+    int hours = (duration/3600000) % 24;
     QString time;
-    if(seconds < 10)
-        time = QString::number(minutes) + ":0" +  QString::number(seconds);
+    if(hours > 0)
+        time.append(QString("%1").arg(hours, 1, 10) + ":" +
+                    QString("%1").arg(minutes, 2, 10, QLatin1Char('0')) + ":" +
+                    QString( "%1" ).arg(seconds, 2, 10, QLatin1Char('0')));
     else
-        time = QString::number(minutes) + ":" +  QString::number(seconds);
+        time.append(QString("%1").arg(minutes, 2, 10, QLatin1Char('0')) + ":" +
+                    QString( "%1" ).arg(seconds, 2, 10, QLatin1Char('0')));
     totL->setText(time);
     pos->setMaximum(duration);
 }
@@ -78,17 +84,32 @@ void MainWindow::setBarPosition(){
     int position = player->position();
     int seconds = (position/1000) % 60;
     int minutes = (position/60000) % 60;
+    int hours = (duration/3600000) % 24;
     QString time;
-    if(seconds < 10)
-        time = QString::number(minutes) + ":0" +  QString::number(seconds);
+    if(hours > 0)
+        time.append(QString("%1").arg(hours, 1, 10) + ":" +
+                    QString("%1").arg(minutes, 2, 10, QLatin1Char('0')) + ":" +
+                    QString( "%1" ).arg(seconds, 2, 10, QLatin1Char('0')));
     else
-        time = QString::number(minutes) + ":" +  QString::number(seconds);
+        time.append(QString("%1").arg(minutes, 2, 10, QLatin1Char('0')) + ":" +
+                    QString( "%1" ).arg(seconds, 2, 10, QLatin1Char('0')));
     curL->setText(time);
-    pos->setValue(position);
+    if (!moving)
+        pos->setValue(position);
 }
 
 void MainWindow::setSongPosition(){
-    player->pause();
-    player->setPosition(pos->value());
     player->play();
+}
+
+void MainWindow::movingSlider(){
+    player->pause();
+    moving = true;
+    player->setPosition(pos->value());
+}
+
+void MainWindow::songEnd(){
+    if(player->state() == QMediaPlayer::StoppedState){
+        btn->setText("Play");
+    }
 }
