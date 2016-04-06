@@ -5,9 +5,10 @@
 
 #include <QMainWindow>
 #include <QMediaPlayer>
-#include <QPushButton>
-#include <QSlider>
-#include <QLabel>
+#include <QKeyEvent>
+#include <QPixmap>
+
+#include "album.h"
 
 namespace Ui {
 class MainWindow;
@@ -21,6 +22,9 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+protected:
+    void keyPressEvent(QKeyEvent* keyevent);
+
 private slots:
     void play();
     void setVolume();
@@ -33,13 +37,10 @@ private slots:
 private:
     Ui::MainWindow *ui;
     QMediaPlayer *player;
-    QPushButton *btn;
-    QSlider *vol;
-    QSlider *pos;
-    QLabel *curL;
-    QLabel *totL;
     bool moving;
-
+    QString folder;
+    //Musica *song;
+    QList<Album*> albuns;
 };
 
 #endif // MAINWINDOW_H

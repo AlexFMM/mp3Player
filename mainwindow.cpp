@@ -8,23 +8,23 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    folder = "C:/Users/alexf/Music/";
 
     player = new QMediaPlayer();
+    //song = new Musica("The Hunter", "The_Hunter-Mastodon.mp3", "Mastodon", "Metal");
+    albuns.append(new Album("Coisa mais nice", "Isto tem cenas bue de fixes", "C:/Users/alexf/Pictures/foto001.jpg"));
+    albuns[0]->addMusica();
 
-    btn = this->findChild<QPushButton*>("playToggle");
-    btn->setText("Play");
-    vol = this->findChild<QSlider*>("volumeSlider");
-    vol->setValue(100);
-    pos = this->findChild<QSlider*>("songPosition");
-    curL = this->findChild<QLabel*>("currentTime");
-    totL = this->findChild<QLabel*>("totalTime");
+    ui->playToggle->setText("Play");
+    ui->volumeSlider->setValue(100);
     moving = false;
-    connect(btn,SIGNAL(clicked()),this,SLOT(play()));
-    connect(vol,SIGNAL(valueChanged(int)), this, SLOT(setVolume()));
+    connect(ui->playToggle,SIGNAL(clicked()),this,SLOT(play()));
+    connect(this,SIGNAL(),this,SLOT(play()));
+    connect(ui->volumeSlider,SIGNAL(valueChanged(int)), this, SLOT(setVolume()));
     connect(player, SIGNAL(durationChanged(qint64)), this, SLOT(setEndTime()));
     connect(player, SIGNAL(positionChanged(qint64)), this, SLOT(setBarPosition()));
-    connect(pos, SIGNAL(sliderReleased()), this, SLOT(setSongPosition()));
-    connect(pos, SIGNAL(sliderMoved(int)), this, SLOT(movingSlider()));
+    connect(ui->songPosition, SIGNAL(sliderReleased()), this, SLOT(setSongPosition()));
+    connect(ui->songPosition, SIGNAL(sliderMoved(int)), this, SLOT(movingSlider()));
     connect(player, SIGNAL(stateChanged(QMediaPlayer::State)), this, SLOT(songEnd()));
 }
 
@@ -32,32 +32,40 @@ MainWindow::~MainWindow()
 {
     delete ui;
     delete player;
-    delete btn;
-    delete vol;
-    delete pos;
-    delete curL;
-    delete totL;
+    //delete song;
+    delete ui->playToggle;
+    delete ui->volumeSlider;
+    delete ui->songPosition;
+    delete ui->currentTime;
+    delete ui->totalTime;
+    delete ui->songName;
+    delete ui->songArtist;
 }
 
 void MainWindow::play(){
     if(player->state() == QMediaPlayer::PlayingState){
         player->pause();
-        btn->setText("Play");
+        ui->playToggle->setText("Play");
     }
     else if(player->state() == QMediaPlayer::PausedState){
         player->play();
-        btn->setText("Pause");
+        ui->playToggle->setText("Pause");
     }
     else{
-        player->setMedia(QUrl::fromLocalFile("C:/Users/alex/Music/The_Hunter-Mastodon.mp3"));
-        player->setVolume(vol->value());
+        player->setMedia(QUrl::fromLocalFile(folder.append(albuns[0]->getSong(0)->getFileName())));
+        ui->songName->setText(albuns[0]->getSong(0)->getName());
+        ui->songArtist->setText(albuns[0]->getSong(0)->getArtistas());
+        //QPixmap *item = new QPixmap(albuns[0]->getImagePath());
+        //item = item->scaled(ui->albumImage->width(), ui->albumImage->height(),Qt::KeepAspectRatio)
+        //ui->albumImage->setPixmap(*item);
+        player->setVolume(ui->volumeSlider->value());
         player->play();
-        btn->setText("Pause");
+        ui->playToggle->setText("Pause");
     }
 }
 
 void MainWindow::setVolume(){
-    player->setVolume(vol->value());
+    player->setVolume(ui->volumeSlider->value());
 }
 
 void MainWindow::setEndTime(){
@@ -73,8 +81,8 @@ void MainWindow::setEndTime(){
     else
         time.append(QString("%1").arg(minutes, 2, 10, QLatin1Char('0')) + ":" +
                     QString( "%1" ).arg(seconds, 2, 10, QLatin1Char('0')));
-    totL->setText(time);
-    pos->setMaximum(duration);
+    ui->totalTime->setText(time);
+    ui->songPosition->setMaximum(duration);
 }
 
 void MainWindow::setBarPosition(){
@@ -93,9 +101,9 @@ void MainWindow::setBarPosition(){
     else
         time.append(QString("%1").arg(minutes, 2, 10, QLatin1Char('0')) + ":" +
                     QString( "%1" ).arg(seconds, 2, 10, QLatin1Char('0')));
-    curL->setText(time);
+    ui->currentTime->setText(time);
     if (!moving)
-        pos->setValue(position);
+        ui->songPosition->setValue(position);
 }
 
 void MainWindow::setSongPosition(){
@@ -105,11 +113,17 @@ void MainWindow::setSongPosition(){
 void MainWindow::movingSlider(){
     player->pause();
     moving = true;
-    player->setPosition(pos->value());
+    player->setPosition(ui->songPosition->value());
 }
 
 void MainWindow::songEnd(){
     if(player->state() == QMediaPlayer::StoppedState){
-        btn->setText("Play");
+        ui->playToggle->setText("Play");
+    }
+}
+
+void MainWindow::keyPressEvent(QKeyEvent *keyevent){
+    if(keyevent->key() == Qt::Key_MediaTogglePlayPause || keyevent->key() == Qt::Key_Space){
+        play();
     }
 }

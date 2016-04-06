@@ -22,7 +22,7 @@
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout_3" rowstretch="4,1">
     <item row="1" column="0">
-     <layout class="QGridLayout" name="MainLayout" rowstretch="3" columnstretch="1,1,1,4">
+     <layout class="QGridLayout" name="MainLayout" rowstretch="0" columnstretch="1,1,1,4" columnminimumwidth="1,1,1,4">
       <property name="sizeConstraint">
        <enum>QLayout::SetDefaultConstraint</enum>
       </property>
@@ -41,6 +41,19 @@
       <property name="verticalSpacing">
        <number>6</number>
       </property>
+      <item row="0" column="1">
+       <widget class="QSlider" name="volumeSlider">
+        <property name="maximum">
+         <number>100</number>
+        </property>
+        <property name="value">
+         <number>50</number>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+       </widget>
+      </item>
       <item row="0" column="0">
        <layout class="QHBoxLayout" name="songControls" stretch="1,1,1">
         <property name="sizeConstraint">
@@ -271,19 +284,6 @@
         </item>
        </layout>
       </item>
-      <item row="0" column="1">
-       <widget class="QSlider" name="volumeSlider">
-        <property name="maximum">
-         <number>100</number>
-        </property>
-        <property name="value">
-         <number>50</number>
-        </property>
-        <property name="orientation">
-         <enum>Qt::Vertical</enum>
-        </property>
-       </widget>
-      </item>
       <item row="0" column="3">
        <layout class="QVBoxLayout" name="verticalLayout_3">
         <property name="sizeConstraint">
@@ -347,12 +347,21 @@
        </layout>
       </item>
       <item row="0" column="2">
-       <widget class="QGraphicsView" name="albumImage">
+       <widget class="QLabel" name="albumImage">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-          <horstretch>1</horstretch>
-          <verstretch>1</verstretch>
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
          </sizepolicy>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>512</width>
+          <height>512</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>TextLabel</string>
         </property>
        </widget>
       </item>
