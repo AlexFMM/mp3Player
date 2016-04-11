@@ -15,12 +15,20 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp\
         musica.cpp \
-    album.cpp
+        album.cpp \
+    	addalbumform.cpp \
+    addmusicform.cpp
 
 HEADERS  += mainwindow.h\
             musica.h \
-    album.h
+            album.h \
+    		addalbumform.h \
+    addmusicform.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    addalbumform.ui \
+    addmusicform.ui
 
 QT += core gui multimedia
+
+DISTFILES +=

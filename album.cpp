@@ -43,8 +43,8 @@ void Album::setImagePath(QString path){
     this->imageFile = path;
 }
 
-void Album::addMusica(){
-    songs.append(new Musica("The Hunter", "The_Hunter-Mastodon.mp3", "Mastodon", "Metal"));
+void Album::addMusica(Musica *song){
+    songs.append(song);
 }
 
 Musica* Album::getSong(int id){
@@ -53,4 +53,10 @@ Musica* Album::getSong(int id){
 
 QString Album::getImagePath(){
     return this->imageFile;
+}
+QString Album::getNome(){
+    return this->nome;
+}
+int Album::getTotalSongs(){
+    return this->songs.count();
 }

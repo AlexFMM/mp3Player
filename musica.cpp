@@ -5,6 +5,15 @@ Musica::Musica()
     this->dataDeAdicao = QDate::currentDate();
 }
 
+Musica::Musica(QString nome, QString file, QList<QString> artistas)
+{
+    this->nome= nome;
+    this->fileName = file;
+    this->artistas = artistas;
+    this->genero = genero;
+    this->dataDeAdicao = QDate::currentDate();
+}
+
 Musica::Musica(QString nome, QString file, QList<QString> artistas, QString genero)
 {
     this->nome= nome;
@@ -18,7 +27,7 @@ Musica::Musica(const char *nome, const char *file, const char *artistas, const c
     this->nome= nome;
     this->fileName = file;
     this->genero = genero;
-    this->artistas = QString::fromUtf8(artistas).split(",");
+    this->artistas = QString::fromUtf8(artistas).split(", ");
     this->dataDeAdicao = QDate::currentDate();
 }
 

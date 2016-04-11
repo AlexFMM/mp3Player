@@ -16,8 +16,10 @@ public:
     void setDescricao(QString);
     void setImagePath(QString);
     QString getImagePath();
-    void addMusica();
+    void addMusica(Musica*);
     Musica* getSong(int id);
+    int getTotalSongs();
+    QString getNome();
 
 private:
     QString nome;
