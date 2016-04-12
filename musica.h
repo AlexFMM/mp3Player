@@ -22,6 +22,7 @@ public:
     QString getFileName();
     QString getGenero();
     QString getArtistas();
+    QDate getDate();
 
 
 private:

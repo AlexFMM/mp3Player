@@ -67,3 +67,6 @@ QString Musica::getArtistas(){
 QString Musica::getGenero(){
     return this->genero;
 }
+QDate Musica::getDate(){
+    return this->dataDeAdicao;
+}

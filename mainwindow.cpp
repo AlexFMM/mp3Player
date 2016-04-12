@@ -16,14 +16,30 @@ MainWindow::MainWindow(QWidget *parent) :
     player = new QMediaPlayer();
     playlist = new QMediaPlaylist();
     player->setPlaylist(playlist);
-    //song = new Musica("The Hunter", "The_Hunter-Mastodon.mp3", "Mastodon", "Metal");
-    albuns.append(new Album("Coisa mais nice", "Isto tem cenas bue de fixes", "C:/Users/alexf/Pictures/foto001.jpg"));
+    albuns.append(new Album("Coisa mais nice", "Isto tem cenas bue de fixes", "C:/Users/alexf/Music/img.jpg"));
     albuns[0]->addMusica(new Musica("The Hunter", "The_Hunter-Mastodon.mp3", "Mastodon", "Metal"));
+
+    albumModel = new QStandardItemModel();
+    tempSong = new QStandardItemModel();
+
+    ui->viewChoice->setCurrentText("Ordenar por");
+
+    QStandardItem *Items;
+    for(int i=0;i<albuns.count();i++){
+        Items = new QStandardItem(albuns[i]->getNome());
+        Items->setIcon(QPixmap(albuns[i]->getImagePath()));
+        albumModel->appendRow(Items);
+    }
+    ui->listObjs->setModel(albumModel);
+    ui->listObjs->setViewMode(QListView::IconMode);
+    ui->listObjs->setIconSize(QSize(80, 80));
+    selAlbum = -1;
 
     ui->playToggle->setText("Play");
     ui->volumeSlider->setValue(100);
+
+    //connect the events
     connect(ui->playToggle,SIGNAL(clicked()),this,SLOT(play()));
-    //connect(this,SIGNAL(),this,SLOT(play()));
     connect(ui->volumeSlider,SIGNAL(valueChanged(int)), this, SLOT(setVolume()));
     connect(player, SIGNAL(durationChanged(qint64)), this, SLOT(setEndTime()));
     connect(player, SIGNAL(positionChanged(qint64)), this, SLOT(setBarPosition()));
@@ -32,23 +48,9 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(player, SIGNAL(stateChanged(QMediaPlayer::State)), this, SLOT(songEnd()));
     connect(ui->listObjs, SIGNAL(clicked(QModelIndex)), this, SLOT(changeList()));
     connect(addAlbum, SIGNAL(finished(int)), this, SLOT(dialogAlbumFinished(int)));
-    //connect(addSong, SIGNAL(finished(int)), this, SLOT(dialogMusicFinished(int)));
-
-    QStandardItem *Items;
-    albumModel = new QStandardItemModel();
-    tempSong = new QStandardItemModel();
-    for(int i=0;i<albuns.count();i++){
-        Items = new QStandardItem(albuns[i]->getNome());
-        albumModel->appendRow(Items);
-    }
-    ui->listObjs->setModel(albumModel);
-    ui->listObjs->setViewMode(QListView::IconMode);
-    ui->listObjs->setSelectionMode(QAbstractItemView::ExtendedSelection);
-    for(int i=0;i<20;i++){
-        Items = new QStandardItem("Album " + QString::number(i));
-        albumModel->appendRow(Items);
-    }
-    selAlbum = -1;
+    connect(addSong, SIGNAL(finished(int)), this, SLOT(dialogMusicFinished(int)));
+    connect(ui->btnAddAlbum, SIGNAL(clicked(bool)), this, SLOT(on_actionAdicionarAlbum_triggered()));
+    connect(ui->btnAddSong, SIGNAL(clicked(bool)), this, SLOT(on_actionAdicionarMusica_triggered()));
 }
 
 MainWindow::~MainWindow()
@@ -146,6 +148,7 @@ void MainWindow::keyPressEvent(QKeyEvent *keyevent){
     }
     else if( keyevent->key() == Qt::Key_Escape && selAlbum !=-1){
         ui->listObjs->setModel(albumModel);
+        ui->listObjs->setViewMode(QListView::IconMode);
         selAlbum = -1;
     }
 }
@@ -153,28 +156,43 @@ void MainWindow::keyPressEvent(QKeyEvent *keyevent){
 void MainWindow::changeList(){
     QStandardItem *Items;
     int sel=ui->listObjs->currentIndex().row();
-    if(sel >= albuns.count())
-        return;
     if(ui->listObjs->model() == tempSong && selAlbum != -1){
-        playlist->addMedia(QUrl::fromLocalFile(folder.append(albuns[selAlbum]->getSong(sel)->getFileName())));
+        if(sel-1 >= albuns[selAlbum]->getTotalSongs())
+                return;
+        if(sel == 0){
+            ui->listObjs->setModel(albumModel);
+            ui->listObjs->setViewMode(QListView::IconMode);
+            selAlbum = -1;
+            return;
+        }
+        player->stop();
+        playlist->removeMedia(playlist->mediaCount());
+        playlist->addMedia(QUrl::fromLocalFile(folder.append(albuns[selAlbum]->getSong(sel-1)->getFileName())));
+        ui->albumImage->setPixmap(QPixmap(albuns[selAlbum]->getImagePath()));
         play();
     }
+    else if(sel >= albuns.count())
+        return;
     else{
         tempSong->clear();
         selAlbum = sel;
+        Items = new QStandardItem("Back");
+        tempSong->appendRow(Items);
         for(int i=0;i<albuns[sel]->getTotalSongs();i++){
-            Items = new QStandardItem(albuns[sel]->getSong(i)->getName());
+            Items = new QStandardItem(albuns[sel]->getSong(i)->getName() + "\t"
+                                      + albuns[sel]->getSong(i)->getArtistas()
+                                      + "\t" + albuns[sel]->getSong(i)->getGenero());
             tempSong->appendRow(Items);
         }
         ui->listObjs->setModel(tempSong);
+        ui->listObjs->setViewMode(QListView::ListMode);
     }
 }
 
 void MainWindow::on_actionAdicionarMusica_triggered()
 {
     if(selAlbum == -1){
-        QMessageBox::information(this, "Erro", "Nenhum Album selecionado");
-        return;
+        QMessageBox::information(this, "Alerta", "Nenhum Album selecionado, vai ser criado um novo album");
     }
     addSong->exec();
 }
@@ -212,10 +230,13 @@ void MainWindow::dialogMusicFinished(int result){
         }
         else{
             QList<QString> l = list[1].split(", ");
-            ui->songArtist->setText(list[2]);
             list[2] = list[2].replace(folder, "");
-            ui->songName->setText(list[2]);
-            albuns[selAlbum]->addMusica(new Musica(list[0], list[1], l));
+            if(selAlbum != -1)
+                albuns[selAlbum]->addMusica(new Musica(list[0], list[2], l));
+            else{
+                albuns.append(new Album());
+                albuns.last()->addMusica(new Musica(list[0], list[2], l));
+            }
         }
         QStandardItem *Items;
         Items = new QStandardItem(albuns[selAlbum]->getSong(albuns[selAlbum]->getTotalSongs()-1)->getName());

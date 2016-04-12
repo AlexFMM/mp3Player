@@ -7,13 +7,15 @@ TODO:
 	
   2. Create the classes for the album and songs
 
-  2.1.Implement the viewer in the UI
+  2.1.[DONE]Implement the viewer in the UI
 
   2.1.1.Make It Pretty
- 
-  3. add more functionalities to the album and songs
 
-  4. Search bar
+  2.2.Implement Playlists
+ 
+  3. Add more functionalities to the album and songs
+
+  4. Search bar, missing funtionality
 
   5. When adding a song with no album selected create a new album
 
@@ -21,7 +23,7 @@ TODO:
   
 
 Details:
-The small white square is an image viewer to show the album cover
-The big  white retangle is to show the diferent albuns and playlists, __not yet implmented__
+The small white square is an image viewer to show the album cover, now works
+The big  white retangle is to show the diferent albuns and playlists
 
 Adding song still doesn't work, but adding album is working
