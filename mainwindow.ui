@@ -410,6 +410,12 @@
       </item>
       <item>
        <widget class="QLineEdit" name="searchBox">
+        <property name="minimumSize">
+         <size>
+          <width>200</width>
+          <height>0</height>
+         </size>
+        </property>
         <property name="maximumSize">
          <size>
           <width>200</width>
@@ -423,6 +429,12 @@
       </item>
       <item>
        <widget class="QComboBox" name="viewChoice">
+        <property name="minimumSize">
+         <size>
+          <width>150</width>
+          <height>0</height>
+         </size>
+        </property>
         <property name="statusTip">
          <string/>
         </property>
@@ -452,8 +464,14 @@
     </item>
     <item row="1" column="0">
      <widget class="QTabWidget" name="Viewer">
+      <property name="tabPosition">
+       <enum>QTabWidget::North</enum>
+      </property>
+      <property name="tabShape">
+       <enum>QTabWidget::Rounded</enum>
+      </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <property name="usesScrollButtons">
        <bool>false</bool>
@@ -467,8 +485,8 @@
          <rect>
           <x>0</x>
           <y>10</y>
-          <width>813</width>
-          <height>201</height>
+          <width>851</width>
+          <height>251</height>
          </rect>
         </property>
         <property name="sizePolicy">
@@ -489,13 +507,13 @@
        <attribute name="title">
         <string>Playlists</string>
        </attribute>
-       <widget class="QTableView" name="tableView">
+       <widget class="QListView" name="listPlay">
         <property name="geometry">
          <rect>
           <x>-5</x>
           <y>10</y>
-          <width>811</width>
-          <height>201</height>
+          <width>861</width>
+          <height>251</height>
          </rect>
         </property>
         <property name="frameShape">

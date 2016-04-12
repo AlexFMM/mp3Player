@@ -21,8 +21,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
     albumModel = new QStandardItemModel();
     tempSong = new QStandardItemModel();
+    searchResults = new QStandardItemModel();
 
-    ui->viewChoice->setCurrentText("Ordenar por");
+    //ui->viewChoice->addAction("Nome ^");
 
     QStandardItem *Items;
     for(int i=0;i<albuns.count();i++){
@@ -137,8 +138,11 @@ void MainWindow::movingSlider(){
 }
 
 void MainWindow::songEnd(){
-    if(player->state() == QMediaPlayer::StoppedState){
+    if(player->state() == QMediaPlayer::StoppedState || player->state() == QMediaPlayer::PausedState){
         ui->playToggle->setText("Play");
+    }
+    else if(player->state() == QMediaPlayer::PlayingState){
+        ui->playToggle->setText("Pause");
     }
 }
 
@@ -150,6 +154,10 @@ void MainWindow::keyPressEvent(QKeyEvent *keyevent){
         ui->listObjs->setModel(albumModel);
         ui->listObjs->setViewMode(QListView::IconMode);
         selAlbum = -1;
+    }
+
+    if(keyevent->key() == Qt::Key_S){//missing modifier
+        ui->searchBox->setFocus();
     }
 }
 

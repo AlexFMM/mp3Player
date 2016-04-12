@@ -56,6 +56,7 @@ private:
     QList<Album*> albuns;
     QStandardItemModel *albumModel;
     QStandardItemModel *tempSong;
+    QStandardItemModel *searchResults;
     int selAlbum;
     AddAlbumForm *addAlbum;
     AddMusicForm *addSong;

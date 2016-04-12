@@ -27,3 +27,5 @@ The small white square is an image viewer to show the album cover, now works
 The big  white retangle is to show the diferent albuns and playlists
 
 Adding song still doesn't work, but adding album is working
+
+Join the play() and songEnd() slots, it can be implemented in only one slot
