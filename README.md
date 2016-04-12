@@ -12,6 +12,12 @@ TODO:
   2.1.1.Make It Pretty
  
   3. add more functionalities to the album and songs
+
+  4. Search bar
+
+  5. When adding a song with no album selected create a new album
+
+  6. Create form to edit song and album informations
   
 
 Details:
