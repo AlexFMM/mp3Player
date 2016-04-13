@@ -15,9 +15,11 @@ TODO:
  
   3. Add more functionalities to the album and songs
 
-  4. Search bar, missing funtionality
+  4. [DONE]Search bar
 
-  5. When adding a song with no album selected create a new album
+  4.1.Missing funtionality
+
+  5. [DONE]When adding a song with no album selected create a new album
 
   6. Create form to edit song and album informations
   
@@ -26,6 +28,3 @@ Details:
 The small white square is an image viewer to show the album cover, now works
 The big  white retangle is to show the diferent albuns and playlists
 
-Adding song still doesn't work, but adding album is working
-
-Join the play() and songEnd() slots, it can be implemented in only one slot

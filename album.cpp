@@ -44,7 +44,7 @@ void Album::setImagePath(QString path){
 }
 
 void Album::addMusica(Musica *song){
-    songs.append(song);
+    this->songs.append(song);
 }
 
 Musica* Album::getSong(int id){

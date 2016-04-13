@@ -37,7 +37,7 @@ QList<QString> AddAlbumForm::getInfo(){
 void AddAlbumForm::on_buttonBox_clicked(QAbstractButton *button)
 {
     if(button->text() != "OK"){
-        this->reject();
+        this->done(QDialog::Rejected);
         return;
     }
     if(ui->nome->toPlainText() == ""){
@@ -46,6 +46,10 @@ void AddAlbumForm::on_buttonBox_clicked(QAbstractButton *button)
     else if(ui->descricao->toPlainText() == ""){
         QMessageBox::information(this, "Erro", "Falta preencher a descrição");
     }
-    else
-        this->accept();
+    else{
+        this->done(QDialog::Accepted);
+        ui->imageFile->setText("");
+        ui->nome->setText("");
+        ui->descricao->setText("");
+    }
 }

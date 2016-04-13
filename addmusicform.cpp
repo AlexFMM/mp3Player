@@ -36,7 +36,7 @@ QList<QString> AddMusicForm::getInfo(){
 void AddMusicForm::on_buttonBox_clicked(QAbstractButton *button)
 {
     if(button->text() != "OK"){
-        this->reject();
+        this->done(QDialog::Rejected);
         return;
     }
     if(ui->nome->toPlainText() == ""){
@@ -48,6 +48,10 @@ void AddMusicForm::on_buttonBox_clicked(QAbstractButton *button)
     else if(ui->pathToFile->toPlainText() == ""){
         QMessageBox::information(this, "Erro", "Falta indicar o ficheiro");
     }
-    else
-        QDialog::accept();
+    else{
+        this->done(QDialog::Accepted);
+        ui->pathToFile->setText("");
+        ui->nome->setText("");
+        ui->artistas->setText("");
+    }
 }
