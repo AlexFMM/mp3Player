@@ -17,17 +17,17 @@ SOURCES += main.cpp\
         musica.cpp \
         album.cpp \
     	addalbumform.cpp \
-    addmusicform.cpp
+        addmusicform.cpp
 
 HEADERS  += mainwindow.h\
             musica.h \
             album.h \
     		addalbumform.h \
-    addmusicform.h
+            addmusicform.h
 
 FORMS    += mainwindow.ui \
-    addalbumform.ui \
-    addmusicform.ui
+            addalbumform.ui \
+            addmusicform.ui
 
 QT += core gui multimedia
 

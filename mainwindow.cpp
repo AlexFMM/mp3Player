@@ -52,6 +52,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(addSong, SIGNAL(finished(int)), this, SLOT(dialogMusicFinished(int)));
     connect(ui->btnAddAlbum, SIGNAL(clicked(bool)), this, SLOT(on_actionAdicionarAlbum_triggered()));
     connect(ui->btnAddSong, SIGNAL(clicked(bool)), this, SLOT(on_actionAdicionarMusica_triggered()));
+    opt = new Options();
+    opt->exec();
 }
 
 MainWindow::~MainWindow()
@@ -156,7 +158,7 @@ void MainWindow::keyPressEvent(QKeyEvent *keyevent){
         selAlbum = -1;
     }
 
-    if(keyevent->key() == Qt::Key_S){//missing modifier
+    if(keyevent->modifiers() == Qt::ControlModifier && keyevent->key() == Qt::Key_S){
         ui->searchBox->setFocus();
     }
 }

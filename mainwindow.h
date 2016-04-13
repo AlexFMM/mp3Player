@@ -15,7 +15,6 @@
 #include "album.h"
 #include "addalbumform.h"
 #include "addmusicform.h"
-
 namespace Ui {
 class MainWindow;
 }

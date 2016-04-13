@@ -439,11 +439,39 @@
          <string/>
         </property>
         <property name="currentText">
-         <string/>
+         <string>Ordenar por</string>
         </property>
         <property name="currentIndex">
-         <number>-1</number>
+         <number>0</number>
         </property>
+        <property name="sizeAdjustPolicy">
+         <enum>QComboBox::AdjustToContentsOnFirstShow</enum>
+        </property>
+        <item>
+         <property name="text">
+          <string>Ordenar por</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Nome ▲</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Nome ▼</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Data de criação ▲</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Data de criação ▼</string>
+         </property>
+        </item>
        </widget>
       </item>
       <item>
