@@ -597,9 +597,34 @@
     </widget>
     <addaction name="actionAdicionarAlbum"/>
     <addaction name="menuMusica"/>
+    <addaction name="actionEditar"/>
+   </widget>
+   <widget class="QMenu" name="menuEditar">
+    <property name="title">
+     <string>Editar</string>
+    </property>
+    <widget class="QMenu" name="menuOrdenar">
+     <property name="title">
+      <string>Ordenar</string>
+     </property>
+     <addaction name="separator"/>
+     <addaction name="actionNome"/>
+     <addaction name="actionNome_2"/>
+     <addaction name="actionData_de_cria_o"/>
+     <addaction name="actionData_de_cria_o_2"/>
+    </widget>
+    <addaction name="menuOrdenar"/>
+   </widget>
+   <widget class="QMenu" name="menuPlaylist">
+    <property name="title">
+     <string>Playlist</string>
+    </property>
+    <addaction name="actionNova"/>
    </widget>
    <addaction name="menuFicheiro"/>
+   <addaction name="menuEditar"/>
    <addaction name="menuAlbum"/>
+   <addaction name="menuPlaylist"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionExit">
@@ -623,6 +648,36 @@
   <action name="actionConfigura_o">
    <property name="text">
     <string>Configuração</string>
+   </property>
+  </action>
+  <action name="actionNome">
+   <property name="text">
+    <string>Nome ▲</string>
+   </property>
+  </action>
+  <action name="actionNome_2">
+   <property name="text">
+    <string>Nome ▼</string>
+   </property>
+  </action>
+  <action name="actionData_de_cria_o">
+   <property name="text">
+    <string>Data de criação ▲</string>
+   </property>
+  </action>
+  <action name="actionData_de_cria_o_2">
+   <property name="text">
+    <string>Data de criação ▼</string>
+   </property>
+  </action>
+  <action name="actionNova">
+   <property name="text">
+    <string>Nova</string>
+   </property>
+  </action>
+  <action name="actionEditar">
+   <property name="text">
+    <string>Editar</string>
    </property>
   </action>
  </widget>

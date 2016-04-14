@@ -20,8 +20,9 @@ MainWindow::MainWindow(QWidget *parent) :
     player->setPlaylist(playlist);
     idSong = 0;
 
-    albuns.append(new Album("Coisa mais nice", "Isto tem cenas bue de fixes", "C:/Users/alexf/Music/img.jpg"));
-    albuns[0]->addMusica(new Musica("The Hunter", "The_Hunter-Mastodon.mp3", "Mastodon", "Metal"));
+    //albuns.append(new Album("Album 1", "Album de teste", "C:/Users/alexf/Music/img.jpg"));
+    //albuns.removeAt(0);
+    //albuns[0]->addMusica(new Musica("The Hunter", "The_Hunter-Mastodon.mp3", "Mastodon", "Metal"));
 
     albumModel = new QStandardItemModel();
     tempSong = new QStandardItemModel();
@@ -39,8 +40,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->playToggle->setText("Play");
     ui->volumeSlider->setValue(100);
-
-    ui->songArtist->setText(QString::number(albuns[0]->getTotalSongs()));
 
     //connect the events
     connect(ui->playToggle,SIGNAL(clicked()),this,SLOT(play()));
