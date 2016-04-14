@@ -20,7 +20,7 @@ AddMusicForm::~AddMusicForm()
 void AddMusicForm::on_pushButton_clicked()
 {
     QString fileName = QFileDialog::getOpenFileName(this,
-        "Open a Song", "c:/Users/alexf/music/", "Music Files (*.mp3)");
+        "Open a Song", "c:/", "Music Files (*.mp3)");
     ui->pathToFile->setText(fileName);
 }
 

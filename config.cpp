@@ -17,7 +17,10 @@ Config::~Config()
 
 void Config::on_pushButton_clicked()
 {
-    QString mkdir = QFileDialog::getExistingDirectory(this, tr("Open Directory"),"/home",QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+    QString mkdir = QFileDialog::getExistingDirectory(this,
+                                                      "Open Directory","C:/",
+                                                      QFileDialog::ShowDirsOnly
+                                                      | QFileDialog::DontResolveSymlinks);
     ui->textEdit->setText(mkdir);
 }
 

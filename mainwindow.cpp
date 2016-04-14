@@ -8,7 +8,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    folder = "C:/Users/alexf/Music/";
+    folder = "C:/";
 
     addAlbum = new AddAlbumForm();
     addSong = new AddMusicForm();
@@ -21,7 +21,6 @@ MainWindow::MainWindow(QWidget *parent) :
     idSong = 0;
 
     //albuns.append(new Album("Album 1", "Album de teste", "C:/Users/alexf/Music/img.jpg"));
-    //albuns.removeAt(0);
     //albuns[0]->addMusica(new Musica("The Hunter", "The_Hunter-Mastodon.mp3", "Mastodon", "Metal"));
 
     albumModel = new QStandardItemModel();
