@@ -16,6 +16,8 @@
 #include "addalbumform.h"
 #include "addmusicform.h"
 #include "editinfo.h"
+#include "config.h"
+
 namespace Ui {
 class MainWindow;
 }
@@ -47,6 +49,10 @@ private slots:
     void on_actionAdicionarMusica_triggered();
     void on_actionAdicionarAlbum_triggered();
 
+    void on_editSong_clicked();
+
+    void on_actionConfigura_o_triggered();
+
 private:
     void updateAlbumList();
     void updateSongList(int);
@@ -54,6 +60,8 @@ private:
     QMediaPlayer *player;
     QMediaPlaylist *playlist;
     bool moving;
+    bool editing;
+    int idSong;
     QString folder;
     //Musica *song;
     QList<Album*> albuns;
@@ -64,6 +72,7 @@ private:
     AddAlbumForm *addAlbum;
     AddMusicForm *addSong;
     EditInfo *edit;
+    Config *conf;
 };
 
 #endif // MAINWINDOW_H

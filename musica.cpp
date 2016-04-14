@@ -45,6 +45,9 @@ void Musica::setFileName(QString file){
 void Musica::setArtistas(QList<QString> artistas){
     this->artistas = artistas;
 }
+void Musica::setArtistas(QString artistas){
+    this->artistas = artistas.split(", ");
+}
 void Musica::setGenero(QString genero){
     this->genero = genero;
 }

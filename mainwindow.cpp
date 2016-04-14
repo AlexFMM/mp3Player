@@ -13,10 +13,12 @@ MainWindow::MainWindow(QWidget *parent) :
     addAlbum = new AddAlbumForm();
     addSong = new AddMusicForm();
     edit = new EditInfo();
+    conf = new Config();
 
     player = new QMediaPlayer();
     playlist = new QMediaPlaylist();
     player->setPlaylist(playlist);
+    idSong = 0;
 
     albuns.append(new Album("Coisa mais nice", "Isto tem cenas bue de fixes", "C:/Users/alexf/Music/img.jpg"));
     albuns[0]->addMusica(new Musica("The Hunter", "The_Hunter-Mastodon.mp3", "Mastodon", "Metal"));
@@ -25,11 +27,14 @@ MainWindow::MainWindow(QWidget *parent) :
     tempSong = new QStandardItemModel();
     searchResults = new QStandardItemModel();
 
+    editing = false;
+
     updateAlbumList();
     ui->listObjs->setModel(albumModel);
     ui->listObjs->setViewMode(QListView::IconMode);
     ui->listObjs->setIconSize(QSize(80, 80));
     ui->listObjs->setMovement(QListView::Static);
+    ui->editSong->hide();
     selAlbum = -1;
 
     ui->playToggle->setText("Play");
@@ -169,11 +174,19 @@ void MainWindow::changeList(){
             ui->listObjs->setModel(albumModel);
             ui->listObjs->setViewMode(QListView::IconMode);
             selAlbum = -1;
+            ui->editSong->hide();
             return;
         }
         if(sel == 1){
             edit->setData(2, albuns[selAlbum]);
             edit->exec();
+            return;
+        }
+        if(editing){
+            edit->setData(1, albuns[selAlbum]->getSong(sel-2));
+            edit->exec();
+            editing = false;
+            idSong = sel-2;
             return;
         }
         player->stop();
@@ -194,6 +207,7 @@ void MainWindow::changeList(){
         updateSongList(selAlbum);
         ui->listObjs->setModel(tempSong);
         ui->listObjs->setViewMode(QListView::ListMode);
+        ui->editSong->show();
     }
 }
 
@@ -252,7 +266,9 @@ void MainWindow::dialogEditFinished(int result){
         QList<QString> list = edit->getData();
         int type = list[0].toInt();
         if(type == 1 && list.count() == 4){//Musica
-
+            albuns[selAlbum]->getSong(idSong)->setNome(list[1]);
+            albuns[selAlbum]->getSong(idSong)->setArtistas(list[2]);
+            albuns[selAlbum]->getSong(idSong)->setGenero(list[3]);
         }
         else if(type == 2 && list.count() == 4){//Album
             albuns[selAlbum]->setNome(list[1]);
@@ -293,4 +309,15 @@ void MainWindow::updateSongList(int alb){
                                  + "\t" + albuns[alb]->getSong(i)->getGenero());
         tempSong->appendRow(Items);
     }
+}
+
+void MainWindow::on_editSong_clicked()
+{
+    editing = true;
+    QMessageBox::information(this, "", "Selecione a musica a editar");
+}
+
+void MainWindow::on_actionConfigura_o_triggered()
+{
+    conf->exec();
 }

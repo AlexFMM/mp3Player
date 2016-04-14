@@ -488,6 +488,13 @@
         </property>
        </widget>
       </item>
+      <item>
+       <widget class="QPushButton" name="editSong">
+        <property name="text">
+         <string>Editar Musica</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </item>
     <item row="1" column="0">
@@ -575,6 +582,7 @@
     <property name="title">
      <string>Ficheiro</string>
     </property>
+    <addaction name="actionConfigura_o"/>
     <addaction name="actionExit"/>
    </widget>
    <widget class="QMenu" name="menuAlbum">
@@ -610,6 +618,11 @@
   <action name="actionAdicionarMusica">
    <property name="text">
     <string>Adicionar</string>
+   </property>
+  </action>
+  <action name="actionConfigura_o">
+   <property name="text">
+    <string>Configuração</string>
    </property>
   </action>
  </widget>

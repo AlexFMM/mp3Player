@@ -18,6 +18,7 @@ public:
     void setFileName(QString);
     void setGenero(QString);
     void setArtistas(QList<QString>);
+    void setArtistas(QString);
     QString getName();
     QString getFileName();
     QString getGenero();
