@@ -20,6 +20,7 @@ public:
     Musica* getSong(int id);
     int getTotalSongs();
     QString getNome();
+    QString getDescricao();
 
 private:
     QString nome;

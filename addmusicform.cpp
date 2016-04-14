@@ -1,6 +1,5 @@
 #include "addmusicform.h"
 #include "ui_addmusicform.h"
-#include "ui_addalbumform.h"
 
 AddMusicForm::AddMusicForm(QWidget *parent) :
     QDialog(parent),

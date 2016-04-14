@@ -12,6 +12,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     addAlbum = new AddAlbumForm();
     addSong = new AddMusicForm();
+    edit = new EditInfo();
 
     player = new QMediaPlayer();
     playlist = new QMediaPlaylist();
@@ -24,12 +25,7 @@ MainWindow::MainWindow(QWidget *parent) :
     tempSong = new QStandardItemModel();
     searchResults = new QStandardItemModel();
 
-    QStandardItem *Items;
-    for(int i=0;i<albuns.count();i++){
-        Items = new QStandardItem(albuns[i]->getNome());
-        Items->setIcon(QPixmap(albuns[i]->getImagePath()));
-        albumModel->appendRow(Items);
-    }
+    updateAlbumList();
     ui->listObjs->setModel(albumModel);
     ui->listObjs->setViewMode(QListView::IconMode);
     ui->listObjs->setIconSize(QSize(80, 80));
@@ -52,6 +48,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->listObjs, SIGNAL(clicked(QModelIndex)), this, SLOT(changeList()));
     connect(addAlbum, SIGNAL(finished(int)), this, SLOT(dialogAlbumFinished(int)));
     connect(addSong, SIGNAL(finished(int)), this, SLOT(dialogMusicFinished(int)));
+    connect(edit, SIGNAL(finished(int)), this, SLOT(dialogEditFinished(int)));
     connect(ui->btnAddAlbum, SIGNAL(clicked(bool)), this, SLOT(on_actionAdicionarAlbum_triggered()));
     connect(ui->btnAddSong, SIGNAL(clicked(bool)), this, SLOT(on_actionAdicionarMusica_triggered()));
 }
@@ -164,7 +161,6 @@ void MainWindow::keyPressEvent(QKeyEvent *keyevent){
 }
 
 void MainWindow::changeList(){
-    QStandardItem *Items;
     int sel=ui->listObjs->currentIndex().row();
     if(ui->listObjs->model() == tempSong && selAlbum != -1){
         if(sel-2 >= albuns[selAlbum]->getTotalSongs())
@@ -175,12 +171,18 @@ void MainWindow::changeList(){
             selAlbum = -1;
             return;
         }
+        if(sel == 1){
+            edit->setData(2, albuns[selAlbum]);
+            edit->exec();
+            return;
+        }
         player->stop();
         if(playlist->mediaCount() > 0)
             playlist->removeMedia(playlist->mediaCount()-1);
         QString file = folder + albuns[selAlbum]->getSong(sel-2)->getFileName();
         playlist->addMedia(QUrl::fromLocalFile(file));
-        ui->songName->setText(file);
+        ui->songName->setText(albuns[selAlbum]->getSong(sel-2)->getName());
+        ui->songArtist->setText(albuns[selAlbum]->getSong(sel-2)->getArtistas());
         ui->albumImage->setPixmap(QPixmap(albuns[selAlbum]->getImagePath()));
         play();
     }
@@ -189,19 +191,7 @@ void MainWindow::changeList(){
     else{
         tempSong->clear();
         selAlbum = sel;
-        Items = new QStandardItem("Back");
-        tempSong->appendRow(Items);
-        Items = new QStandardItem(albuns[selAlbum]->getNome()+ "\t\t"
-                                 + "Tem " + QString::number(albuns[selAlbum]->getTotalSongs())
-                                  + " músicas");
-        Items->setIcon(QPixmap(albuns[selAlbum]->getImagePath()));
-        tempSong->appendRow(Items);
-        for(int i=0;i<albuns[sel]->getTotalSongs();i++){
-            Items = new QStandardItem(albuns[sel]->getSong(i)->getName() + "\t\t"
-                                      + albuns[sel]->getSong(i)->getArtistas()
-                                      + "\t\t" + albuns[sel]->getSong(i)->getGenero());
-            tempSong->appendRow(Items);
-        }
+        updateSongList(selAlbum);
         ui->listObjs->setModel(tempSong);
         ui->listObjs->setViewMode(QListView::ListMode);
     }
@@ -233,10 +223,7 @@ void MainWindow::dialogAlbumFinished(int result){
             albuns.append(new Album(list[0], list[1], list[2]));
         else
             albuns.append(new Album(list[0], list[1]));
-        QStandardItem *Items;
-        Items = new QStandardItem(albuns.last()->getNome());
-        Items->setIcon(QPixmap(albuns.last()->getImagePath()));
-        albumModel->appendRow(Items);
+        updateAlbumList();
     }
 }
 
@@ -256,12 +243,54 @@ void MainWindow::dialogMusicFinished(int result){
                 albuns.last()->addMusica(new Musica(list[0], list[2], l));
             }
         }
-        QStandardItem *Items;
-        int idSong = albuns[selAlbum]->getTotalSongs()-1;
-        Items = new QStandardItem(albuns[selAlbum]->getSong(idSong)->getName() + "\t"
-                                 + albuns[selAlbum]->getSong(idSong)->getArtistas()
-                                 + "\t" + albuns[selAlbum]->getSong(idSong)->getGenero());
+        updateSongList(selAlbum);
+    }
+}
+
+void MainWindow::dialogEditFinished(int result){
+    if(result == QDialog::Accepted){
+        QList<QString> list = edit->getData();
+        int type = list[0].toInt();
+        if(type == 1 && list.count() == 4){//Musica
+
+        }
+        else if(type == 2 && list.count() == 4){//Album
+            albuns[selAlbum]->setNome(list[1]);
+            albuns[selAlbum]->setDescricao(list[2]);
+            albuns[selAlbum]->setImagePath(list[3]);
+        }
+        else
+            return;
+    }
+    updateAlbumList();
+    updateSongList(selAlbum);
+}
+
+void MainWindow::updateAlbumList(){
+    albumModel->clear();
+    QStandardItem *Items;
+    for(int i=0;i<albuns.count();i++){
+        Items = new QStandardItem(albuns[i]->getNome());
+        Items->setIcon(QPixmap(albuns[i]->getImagePath()));
+        albumModel->appendRow(Items);
+    }
+}
+
+void MainWindow::updateSongList(int alb){
+    tempSong->clear();
+    QStandardItem *Items;
+    Items = new QStandardItem("Back");
+    tempSong->appendRow(Items);
+    Items = new QStandardItem(albuns[alb]->getNome()+ "\t\t"
+                             + albuns[alb]->getDescricao() + "\t\t"
+                             + "Tem " + QString::number(albuns[alb]->getTotalSongs())
+                             + " músicas");
+    Items->setIcon(QPixmap(albuns[alb]->getImagePath()));
+    tempSong->appendRow(Items);
+    for(int i=0;i<albuns[alb]->getTotalSongs();i++){
+        Items = new QStandardItem(albuns[alb]->getSong(i)->getName() + "\t"
+                                 + albuns[alb]->getSong(i)->getArtistas()
+                                 + "\t" + albuns[alb]->getSong(i)->getGenero());
         tempSong->appendRow(Items);
-        ui->songArtist->setText(QString::number(albuns[selAlbum]->getTotalSongs()));
     }
 }

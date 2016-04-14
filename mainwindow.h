@@ -15,6 +15,7 @@
 #include "album.h"
 #include "addalbumform.h"
 #include "addmusicform.h"
+#include "editinfo.h"
 namespace Ui {
 class MainWindow;
 }
@@ -41,11 +42,14 @@ private slots:
     void changeList();
     void dialogAlbumFinished(int);
     void dialogMusicFinished(int);
+    void dialogEditFinished(int);
 
     void on_actionAdicionarMusica_triggered();
     void on_actionAdicionarAlbum_triggered();
 
 private:
+    void updateAlbumList();
+    void updateSongList(int);
     Ui::MainWindow *ui;
     QMediaPlayer *player;
     QMediaPlaylist *playlist;
@@ -59,6 +63,7 @@ private:
     int selAlbum;
     AddAlbumForm *addAlbum;
     AddMusicForm *addSong;
+    EditInfo *edit;
 };
 
 #endif // MAINWINDOW_H

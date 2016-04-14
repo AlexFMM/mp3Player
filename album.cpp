@@ -57,6 +57,9 @@ QString Album::getImagePath(){
 QString Album::getNome(){
     return this->nome;
 }
+QString Album::getDescricao(){
+    return this->descricao;
+}
 int Album::getTotalSongs(){
     return this->songs.count();
 }
