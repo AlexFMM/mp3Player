@@ -10,6 +10,13 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     folder = "C:/";
 
+    db = QSqlDatabase::addDatabase("QSQLITE");
+    db.setDatabaseName("C:/Users/alexf/Documents/QT/MusicPlayer/player.db");
+    if (!db.open())
+        QMessageBox::information(this, "Alerta", "Não se consegue connectar a base de dados!");
+
+    readFromDB();
+
     addAlbum = new AddAlbumForm();
     addSong = new AddMusicForm();
     edit = new EditInfo();
@@ -58,17 +65,11 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
+    db.close();
     delete ui;
     delete player;
     delete addAlbum;
     delete addSong;
-    delete ui->playToggle;
-    delete ui->volumeSlider;
-    delete ui->songPosition;
-    delete ui->currentTime;
-    delete ui->totalTime;
-    delete ui->songName;
-    delete ui->songArtist;
 }
 
 void MainWindow::play(){
@@ -231,10 +232,16 @@ void MainWindow::dialogAlbumFinished(int result){
             addAlbum->exec();
             return;
         }
-        else if(list.count() == 3)
+        else if(list.count() == 3){
             albuns.append(new Album(list[0], list[1], list[2]));
-        else
+            QSqlQuery query;
+            query.exec("insert into Albuns values('" + list[0] + "', '" + list[1] + "','" + list[2] + "')");
+        }
+        else{
             albuns.append(new Album(list[0], list[1]));
+            QSqlQuery query;
+            query.exec("insert into Albuns values('" + list[0] + "', '" + list[1] + "','')");
+        }
         updateAlbumList();
     }
 }
@@ -318,4 +325,16 @@ void MainWindow::on_editSong_clicked()
 void MainWindow::on_actionConfigura_o_triggered()
 {
     conf->exec();
+}
+
+void MainWindow::readFromDB(){
+    /*QSqlQuery query;
+    QString name, desc, imFile;
+    query.exec("SELECT Name, Description, ImagePath FROM Albuns");
+    QSqlRecord record = query.record();
+    name = record.value(0).toString();
+    desc = record.value(1).toString();
+    imFile = record.value(2).toString();
+    QMessageBox::information(this, "Li", name+desc+imFile);
+    albuns.append(new Album(name, desc, imFile));*/
 }

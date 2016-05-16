@@ -11,6 +11,7 @@
 #include <QStandardItem>
 #include <QStandardItemModel>
 #include <QMessageBox>
+#include <QtSql>
 
 #include "album.h"
 #include "addalbumform.h"
@@ -56,6 +57,7 @@ private slots:
 private:
     void updateAlbumList();
     void updateSongList(int);
+    void readFromDB();
     Ui::MainWindow *ui;
     QMediaPlayer *player;
     QMediaPlaylist *playlist;
@@ -63,12 +65,12 @@ private:
     bool editing;
     int idSong;
     QString folder;
-    //Musica *song;
     QList<Album*> albuns;
     QStandardItemModel *albumModel;
     QStandardItemModel *tempSong;
     QStandardItemModel *searchResults;
     int selAlbum;
+    QSqlDatabase db;
     AddAlbumForm *addAlbum;
     AddMusicForm *addSong;
     EditInfo *edit;

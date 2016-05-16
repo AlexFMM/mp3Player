@@ -35,6 +35,6 @@ FORMS    += mainwindow.ui \
             editinfo.ui \
             config.ui
 
-QT += core gui multimedia
+QT += core gui multimedia sql
 
 DISTFILES +=
