@@ -52,4 +52,5 @@ void AddAlbumForm::on_buttonBox_clicked(QAbstractButton *button)
         ui->nome->setText("");
         ui->descricao->setText("");
     }
+
 }

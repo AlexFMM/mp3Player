@@ -8,10 +8,10 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    folder = "C:/";
+    folder = "C:/songs/albuns";
 
     db = QSqlDatabase::addDatabase("QSQLITE");
-    db.setDatabaseName("C:/Users/alexf/Documents/QT/MusicPlayer/player.db");
+    db.setDatabaseName("C:/Users/Filipe/Desktop/bd/player.db");
     if (!db.open())
         QMessageBox::information(this, "Alerta", "Não se consegue connectar a base de dados!");
 
@@ -234,6 +234,7 @@ void MainWindow::dialogAlbumFinished(int result){
         }
         else if(list.count() == 3){
             albuns.append(new Album(list[0], list[1], list[2]));
+            QDir().mkdir(QString::number(albuns.size()));
             QSqlQuery query;
             query.exec("insert into Albuns values('" + list[0] + "', '" + list[1] + "','" + list[2] + "')");
         }
@@ -255,13 +256,18 @@ void MainWindow::dialogMusicFinished(int result){
         }
         else{
             QList<QString> l = list[1].split(", ");
-            list[2] = list[2].replace(folder, "");
-            if(selAlbum != -1)
+
+
+            if(selAlbum != -1){
                 albuns[selAlbum]->addMusica(new Musica(list[0], list[2], l));
-            else{
-                albuns.last()->addMusica(new Musica(list[0], list[2], l));
+                QFile::copy(list[2],folder+QString::number(selAlbum+1));
+
             }
+            /*else{
+                albuns.last()->addMusica(new Musica(list[0], list[2], l));
+            }*/
         }
+
         updateSongList(selAlbum);
     }
 }

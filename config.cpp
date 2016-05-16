@@ -1,4 +1,4 @@
-
+#include "mainwindow.h"
 #include "config.h"
 #include "ui_config.h"
 #include <QFileDialog>
@@ -21,6 +21,7 @@ void Config::on_pushButton_clicked()
                                                       "Open Directory","C:/",
                                                       QFileDialog::ShowDirsOnly
                                                       | QFileDialog::DontResolveSymlinks);
+
     ui->textEdit->setText(mkdir);
 }
 
