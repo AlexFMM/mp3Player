@@ -27,6 +27,10 @@ TODO:
 
   7. [DONE]Create config form
   
+  8. Path to folder + create folder if not found
+  8.1 Change folder directory 	
+  
+  
 
 Details:
 The small white square is an image viewer to show the album cover, now works
