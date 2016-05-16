@@ -27,9 +27,6 @@ MainWindow::MainWindow(QWidget *parent) :
     player->setPlaylist(playlist);
     idSong = 0;
 
-    //albuns.append(new Album("Album 1", "Album de teste", "C:/Users/alexf/Music/img.jpg"));
-    //albuns[0]->addMusica(new Musica("The Hunter", "The_Hunter-Mastodon.mp3", "Mastodon", "Metal"));
-
     albumModel = new QStandardItemModel();
     tempSong = new QStandardItemModel();
     searchResults = new QStandardItemModel();
@@ -153,13 +150,14 @@ void MainWindow::keyPressEvent(QKeyEvent *keyevent){
     if(keyevent->key() == Qt::Key_MediaTogglePlayPause || keyevent->key() == Qt::Key_Space){
         play();
     }
+
     else if( keyevent->key() == Qt::Key_Escape && selAlbum !=-1){
         ui->listObjs->setModel(albumModel);
         ui->listObjs->setViewMode(QListView::IconMode);
         selAlbum = -1;
     }
 
-    if(keyevent->modifiers() == Qt::ControlModifier && keyevent->key() == Qt::Key_S){
+    if(keyevent->modifiers() == Qt::ControlModifier && keyevent->key() == Qt::Key_F){
         ui->searchBox->setFocus();
     }
 }
@@ -213,8 +211,15 @@ void MainWindow::changeList(){
 void MainWindow::on_actionAdicionarMusica_triggered()
 {
     if(selAlbum == -1){
-        QMessageBox::information(this, "Alerta", "Nenhum Album selecionado, vai ser criado um novo album");
+        QMessageBox msg;
+        msg.setText("Nenhum Album selecionado, deseja criar um novo album?");
+        msg.setStandardButtons(QMessageBox::Yes| QMessageBox::No);
+        int re = msg.exec();
+        if(re == QMessageBox::No)
+            return;
         addAlbum->exec();
+        if(addAlbum->result() != QDialog::Accepted)
+            return;
         selAlbum = albuns.count()-1;
     }
     addSong->exec();
@@ -235,14 +240,25 @@ void MainWindow::dialogAlbumFinished(int result){
         else if(list.count() == 3){
             albuns.append(new Album(list[0], list[1], list[2]));
             QSqlQuery query;
-            query.exec("insert into Albuns values('" + list[0] + "', '" + list[1] + "','" + list[2] + "')");
+            query.prepare("INSERT INTO Albuns (Name, Description, ImagePath) "
+                          "VALUES (:n, :d, :i)");
+            query.bindValue(":n", list[0]);
+            query.bindValue(":d", list[1]);
+            query.bindValue(":i", list[2]);
+            query.exec();
         }
         else{
             albuns.append(new Album(list[0], list[1]));
             QSqlQuery query;
-            query.exec("insert into Albuns values('" + list[0] + "', '" + list[1] + "','')");
+            query.prepare("INSERT INTO Albuns (Name, Description, ImagePath) "
+                          "VALUES (:n, :d, :i)");
+            query.bindValue(":n", list[0]);
+            query.bindValue(":d", list[1]);
+            query.bindValue(":i", "");
+            query.exec();
         }
         updateAlbumList();
+        db.commit();
     }
 }
 
@@ -256,8 +272,20 @@ void MainWindow::dialogMusicFinished(int result){
         else{
             QList<QString> l = list[1].split(", ");
             list[2] = list[2].replace(folder, "");
-            if(selAlbum != -1)
+            if(selAlbum != -1){
                 albuns[selAlbum]->addMusica(new Musica(list[0], list[2], l));
+                QSqlQuery query;
+                query.prepare("INSERT INTO Musica (Name, Artists, FilePath, Genre, DateAdded, Album) "
+                              "VALUES (:n, :a, :f, :g, :d, :al)");
+                query.bindValue(":n", list[0]);
+                query.bindValue(":a", list[1]);
+                query.bindValue(":f", list[2]);
+                query.bindValue(":g", "");
+                query.bindValue(":d", albuns[selAlbum]->getSong(
+                                    albuns[selAlbum]->getTotalSongs()-1)->getDate());
+                query.bindValue(":al", selAlbum);
+                query.exec();
+            }
             else{
                 albuns.last()->addMusica(new Musica(list[0], list[2], l));
             }
@@ -274,11 +302,27 @@ void MainWindow::dialogEditFinished(int result){
             albuns[selAlbum]->getSong(idSong)->setNome(list[1]);
             albuns[selAlbum]->getSong(idSong)->setArtistas(list[2]);
             albuns[selAlbum]->getSong(idSong)->setGenero(list[3]);
+            QSqlQuery query;
+            query.prepare("UPDATE Musica SET Name = :n, Artists = :a,"
+                          "Genre = :g WHERE rowid = :sel");
+            query.bindValue(":n", list[1]);
+            query.bindValue(":a", list[2]);
+            query.bindValue(":g", list[3]);
+            query.bindValue(":sel", idSong+1);
+            query.exec();
         }
         else if(type == 2 && list.count() == 4){//Album
             albuns[selAlbum]->setNome(list[1]);
             albuns[selAlbum]->setDescricao(list[2]);
             albuns[selAlbum]->setImagePath(list[3]);
+            QSqlQuery query;
+            query.prepare("UPDATE Albuns SET Name = :n, Description = :d,"
+                          "ImagePath = :i WHERE rowid = :sel");
+            query.bindValue(":n", list[1]);
+            query.bindValue(":d", list[2]);
+            query.bindValue(":i", list[3]);
+            query.bindValue(":sel", selAlbum+1);
+            query.exec();
         }
         else
             return;
@@ -328,13 +372,32 @@ void MainWindow::on_actionConfigura_o_triggered()
 }
 
 void MainWindow::readFromDB(){
-    /*QSqlQuery query;
+    QSqlQuery query;
+    QSqlRecord record;
     QString name, desc, imFile;
-    query.exec("SELECT Name, Description, ImagePath FROM Albuns");
-    QSqlRecord record = query.record();
-    name = record.value(0).toString();
-    desc = record.value(1).toString();
-    imFile = record.value(2).toString();
-    QMessageBox::information(this, "Li", name+desc+imFile);
-    albuns.append(new Album(name, desc, imFile));*/
+    QString art, file, gen;
+    int id;
+    QDate date;
+
+    query.exec("SELECT * FROM Albuns");
+    while (query.next()) {
+        record = query.record();
+        name = record.value(0).toString();
+        desc = record.value(1).toString();
+        imFile = record.value(2).toString();
+        albuns.append(new Album(name, desc, imFile));
+    }
+    query.clear();
+
+    query.exec("SELECT * FROM Musica");
+    while (query.next()) {
+        record = query.record();
+        name = record.value(0).toString();
+        art = record.value(1).toString();
+        file = record.value(2).toString();
+        gen = record.value(3).toString();
+        date = record.value(4).toDate();
+        id = record.value(5).toInt();
+        albuns.at(id)->addMusica(new Musica(name,file,art,gen,date));
+    }
 }
