@@ -47,10 +47,6 @@ void Album::addMusica(Musica *song){
     this->songs.append(song);
 }
 
-Musica* Album::getSong(int id){
-    return songs[id];
-}
-
 QString Album::getImagePath(){
     return this->imageFile;
 }
@@ -60,6 +56,4 @@ QString Album::getNome(){
 QString Album::getDescricao(){
     return this->descricao;
 }
-int Album::getTotalSongs(){
-    return this->songs.count();
-}
+
