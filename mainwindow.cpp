@@ -59,6 +59,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(edit, SIGNAL(finished(int)), this, SLOT(dialogEditFinished(int)));
     connect(ui->btnAddAlbum, SIGNAL(clicked(bool)), this, SLOT(on_actionAdicionarAlbum_triggered()));
     connect(ui->btnAddSong, SIGNAL(clicked(bool)), this, SLOT(on_actionAdicionarMusica_triggered()));
+    connect(ui->searchBox, SIGNAL(textChanged(QString)), this, SLOT(search()));
 }
 
 MainWindow::~MainWindow()
@@ -147,42 +148,72 @@ void MainWindow::movingSlider(){
     player->setPosition(ui->songPosition->value());
 }
 
+//Handle the keyboard press event
 void MainWindow::keyPressEvent(QKeyEvent *keyevent){
+    //Media Play/Pause and the space key toggle the play status
     if(keyevent->key() == Qt::Key_MediaTogglePlayPause
                                     || keyevent->key() == Qt::Key_Space){
         play();
     }
-
-    else if( keyevent->key() == Qt::Key_Escape && selAlbum !=-1){
+    //Esc key resets the listView
+    else if(keyevent->key() == Qt::Key_Escape){
         ui->listObjs->setModel(albumModel);
         ui->listObjs->setViewMode(QListView::IconMode);
         selAlbum = -1;
     }
-
+    else if(keyevent->key() == Qt::Key_Enter
+                                    || keyevent->key() == Qt::Key_Return){
+        ui->searchBox->setFocus();
+        search();
+    }
+    //Use the combo Ctrl+F to give focus to the search box
     if(keyevent->modifiers() == Qt::ControlModifier
                                     && keyevent->key() == Qt::Key_F){
         ui->searchBox->setFocus();
     }
 }
 
+//Change the list used in the the main listView and handle
+//The presses
 void MainWindow::changeList(){
     int sel=ui->listObjs->currentIndex().row();
-    if(ui->listObjs->model() == tempSong && selAlbum != -1){
+    if (ui->listObjs->model() == searchResults){
+        int al = searchResultsIds.at(2*sel);
+        int id = searchResultsIds.at(2*sel+1);
+        player->stop();
+        if(playlist->mediaCount() > 0)
+            playlist->removeMedia(playlist->mediaCount()-1);
+        QString file = folder + albuns[al]->songs.at(id)->getFileName();
+        playlist->addMedia(QUrl::fromLocalFile(file));
+        ui->songName->setText(albuns[al]->songs.at(id)->getName());
+        ui->songArtist->setText(albuns[al]->songs.at(id)->getArtistas());
+        ui->albumImage->setPixmap(QPixmap(albuns[al]->getImagePath()));
+        play();
+    }
+    else if(ui->listObjs->model() == tempSong && selAlbum != -1){
+        //Ignore the selection if the number is higher than the
+        //Total songs in the selected album
         if(sel-2 >= albuns[selAlbum]->songs.count())
                 return;
-        if(sel == 0){
+        if(sel == 0){//if the item pressed is the first "back" go back to
+                     //list of all the albums
             ui->listObjs->setModel(albumModel);
             ui->listObjs->setViewMode(QListView::IconMode);
             selAlbum = -1;
+            editing = false;
             ui->editSong->hide();
             return;
         }
-        if(sel == 1){
+        if(sel == 1){//If the user presses the item with the album information
+                     //Open the edit form for that album
             edit->setData(2, albuns[selAlbum]);
             edit->exec();
+            editing = false;
             return;
         }
-        if(editing){
+        if(editing){//If the user presses any other song after pressing
+                    //The button "Editar Musica" open the edit form for
+                    //That song
             edit->setData(1, albuns[selAlbum]->songs.at(sel-2));
             edit->exec();
             editing = false;
@@ -202,6 +233,8 @@ void MainWindow::changeList(){
     else if(sel >= albuns.count())
         return;
     else{
+        //Set the list used in the main listView as the list of songs of the
+        //Selected album
         tempSong->clear();
         selAlbum = sel;
         updateSongList(selAlbum);
@@ -294,14 +327,15 @@ void MainWindow::dialogMusicFinished(int result){
             //Insert the information in the database
             QSqlQuery query;
             query.prepare("INSERT INTO Musica (Name, Artists, FilePath,"
-                          " Genre, DateAdded, Album) VALUES "
-                          "(:n, :a, :f, :g, :d, :al)");
+                          " Genre, DateAdded, Album, ID) VALUES "
+                          "(:n, :a, :f, :g, :d, :al, i)");
             query.bindValue(":n", list[0]);
             query.bindValue(":a", list[1]);
             query.bindValue(":f", list[2]);
             query.bindValue(":g", "");
             query.bindValue(":d", albuns[selAlbum]->songs.last()->getDate());
             query.bindValue(":al", selAlbum);
+            query.bindValue(":i", albuns[selAlbum]->songs.count()-1);
             query.exec();
         }
         updateSongList(selAlbum);
@@ -416,7 +450,6 @@ void MainWindow::on_actionConfigura_o_triggered()
     conf->exec();
 }
 
-
 //This function will read the information stored in the SQLite database
 //So the information can be stored from different sessions of the program
 //The information is read from de database and then the corresponding
@@ -460,3 +493,57 @@ void MainWindow::readFromDB(){
         albuns.at(id)->addMusica(new Musica(name,file,art,gen,date));
     }
 }
+
+//search
+void MainWindow::search(){
+    QString se = ui->searchBox->text();
+    if(se.isEmpty()){
+        ui->listObjs->setModel(albumModel);
+        ui->listObjs->setViewMode(QListView::IconMode);
+        selAlbum = -1;
+        searchResultsIds.clear();
+        return;
+    }
+    QSqlQuery query;
+    QSqlRecord record;
+    QString art, file, gen;
+    int al, id;
+    QStandardItem *Items;
+    bool isInt;
+    se.toInt(&isInt);
+    if(isInt){
+        query.prepare("SELECT * FROM Musica WHERE DateAdded LIKE :s");
+    }
+    else{
+        query.prepare("SELECT * FROM Musica WHERE Name LIKE :s"
+                                                    " OR Artists LIKE :s");
+
+    }
+    se = "%"+se+"%";
+    query.bindValue(":s", se);
+    query.exec();
+    searchResults->clear();
+    searchResultsIds.clear();
+    while (query.next()){
+        record = query.record();
+        al = record.value(5).toInt();
+        id = record.value(6).toInt();
+        record = query.record();
+        Items = new QStandardItem(albuns[al]->songs.at(id)->getName() + "\t"
+                            + albuns[al]->songs.at(id)->getArtistas()
+                            + "\t" + albuns[al]->songs.at(id)->getGenero()
+                            + "\t in the album " + albuns[al]->getNome());
+        searchResults->appendRow(Items);
+        searchResultsIds.append(al);
+        searchResultsIds.append(id);
+    }
+    ui->listObjs->setModel(searchResults);
+    ui->listObjs->setViewMode(QListView::ListMode);
+}
+
+
+
+
+
+
+

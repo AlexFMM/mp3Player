@@ -46,7 +46,7 @@ private slots:
     void dialogAlbumFinished(int);
     void dialogMusicFinished(int);
     void dialogEditFinished(int);
-
+    void search();
     void on_actionAdicionarMusica_triggered();
     void on_actionAdicionarAlbum_triggered();
 
@@ -69,6 +69,7 @@ private:
     QStandardItemModel *albumModel;
     QStandardItemModel *tempSong;
     QStandardItemModel *searchResults;
+    QList<int> searchResultsIds;
     int selAlbum;
     QSqlDatabase db;
     AddAlbumForm *addAlbum;
