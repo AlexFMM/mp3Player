@@ -17,6 +17,8 @@ Config::~Config()
 
 void Config::on_pushButton_clicked()
 {
+
+    QFile::copy("C:/Users/Filipe/Desktop/songs/albuns","C:/Users/Filipe/Downloads/caucenus.png");
     QString mkdir = QFileDialog::getExistingDirectory(this,
                                                       "Open Directory","C:/",
                                                       QFileDialog::ShowDirsOnly

@@ -8,10 +8,27 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    folder = "C:/songs/albuns";
 
+
+    QDir dir("C:/Users/Filipe/Desktop/songs/albuns");
+    if (!dir.exists() ) {
+        dir.mkpath("C:/Users/Filipe/Desktop/songs/albuns");
+
+
+    }
+
+
+   /* if (!db.exists()){
+        db = QSqlDatabase::addDatabase("QSQLITE");
+        db.setDatabaseName("C:/Users/Filipe/Desktop/songs");
+    }*/
+
+    /*
+    if(QDir("C:/Users/Filipe/Desktop/songs/albuns").exists()!=0){
+    folder = QDir().mkdir( "C:/Users/Filipe/Desktop/songs/albuns");
+}*/
     db = QSqlDatabase::addDatabase("QSQLITE");
-    db.setDatabaseName("C:/Users/Filipe/Desktop/bd/player.db");
+    db.setDatabaseName("C:/Users/Filipe/Desktop/mp3Player/player.db");
     if (!db.open())
         QMessageBox::information(this, "Alerta", "Não se consegue connectar a base de dados!");
 
@@ -226,7 +243,17 @@ void MainWindow::on_actionAdicionarAlbum_triggered()
 }
 
 void MainWindow::dialogAlbumFinished(int result){
+    QDir dir(QString::number(albuns.size())+1);
+    if (!dir.exists() ) {
+        dir.mkpath("C:/Users/Filipe/Desktop/songs/albuns/"+QString::number(albuns.size()));
+
+    }
+
+
     if(result == QDialog::Accepted){
+
+
+
         QList<QString> list = addAlbum->getInfo();
         if(list.count() < 2){
             addAlbum->exec();
@@ -234,9 +261,13 @@ void MainWindow::dialogAlbumFinished(int result){
         }
         else if(list.count() == 3){
             albuns.append(new Album(list[0], list[1], list[2]));
-            QDir().mkdir(QString::number(albuns.size()));
+
+
+
+           // QDir().mkdir(QString::number(albuns.size()));
             QSqlQuery query;
             query.exec("insert into Albuns values('" + list[0] + "', '" + list[1] + "','" + list[2] + "')");
+
         }
         else{
             albuns.append(new Album(list[0], list[1]));
@@ -244,6 +275,8 @@ void MainWindow::dialogAlbumFinished(int result){
             query.exec("insert into Albuns values('" + list[0] + "', '" + list[1] + "','')");
         }
         updateAlbumList();
+
+
     }
 }
 
@@ -260,7 +293,7 @@ void MainWindow::dialogMusicFinished(int result){
 
             if(selAlbum != -1){
                 albuns[selAlbum]->addMusica(new Musica(list[0], list[2], l));
-                QFile::copy(list[2],folder+QString::number(selAlbum+1));
+                QFile::copy(list[2],"C:/Users/Filipe/Desktop/songs/albuns");  //folder+QString::number(selAlbum)
 
             }
             /*else{
