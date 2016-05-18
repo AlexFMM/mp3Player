@@ -73,3 +73,9 @@ void EditInfo::on_buttonBox_clicked(QAbstractButton *button)
         this->done(QDialog::Accepted);
     }
 }
+
+void EditInfo::on_pushButton_clicked()
+{
+    ui->nome->setText("_rem_");
+    this->done(QDialog::Accepted);
+}

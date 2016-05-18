@@ -11,6 +11,7 @@
 #include <QStandardItem>
 #include <QStandardItemModel>
 #include <QMessageBox>
+#include <QListWidgetItem>
 #include <QtSql>
 
 #include "album.h"
@@ -49,20 +50,26 @@ private slots:
     void search();
     void on_actionAdicionarMusica_triggered();
     void on_actionAdicionarAlbum_triggered();
+    void ProvideContextMenu(const QPoint &);
 
     void on_editSong_clicked();
 
     void on_actionConfigura_o_triggered();
 
+
 private:
     void updateAlbumList();
     void updateSongList(int);
+    void createDB();
     void readFromDB();
+    bool removeAlbum(int);
+    bool removeMusica(int, int);
     Ui::MainWindow *ui;
     QMediaPlayer *player;
     QMediaPlaylist *playlist;
     bool moving;
     bool editing;
+    bool menu;
     int idSong;
     QString folder;
     QList<Album*> albuns;
@@ -70,6 +77,7 @@ private:
     QStandardItemModel *tempSong;
     QStandardItemModel *searchResults;
     QList<int> searchResultsIds;
+    QList<QString> artistas;
     int selAlbum;
     QSqlDatabase db;
     AddAlbumForm *addAlbum;
