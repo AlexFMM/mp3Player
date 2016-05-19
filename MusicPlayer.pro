@@ -19,7 +19,9 @@ SOURCES += main.cpp\
     	addalbumform.cpp \
         addmusicform.cpp \
         editinfo.cpp \
-        config.cpp
+        config.cpp \
+    playlist.cpp \
+    addplaylistform.cpp
 
 HEADERS  += mainwindow.h\
             musica.h \
@@ -27,13 +29,16 @@ HEADERS  += mainwindow.h\
     		addalbumform.h \
             addmusicform.h \
             editinfo.h \
-            config.h
+            config.h \
+    playlist.h \
+    addplaylistform.h
 
 FORMS    += mainwindow.ui \
             addalbumform.ui \
             addmusicform.ui \
             editinfo.ui \
-            config.ui
+            config.ui \
+    addplaylistform.ui
 
 QT += core gui multimedia sql
 

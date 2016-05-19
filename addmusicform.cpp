@@ -20,7 +20,7 @@ AddMusicForm::~AddMusicForm()
 void AddMusicForm::on_pushButton_clicked()
 {
     QString fileName = QFileDialog::getOpenFileName(this,
-        "Open a Song", "c:/", "Music Files (*.mp3)");
+        "Open a Song", "C:/", "Music Files (*.mp3)");
     ui->pathToFile->setText(fileName);
 }
 
@@ -29,6 +29,7 @@ QList<QString> AddMusicForm::getInfo(){
     list.append(ui->nome->toPlainText());
     list.append(ui->artistas->toPlainText());
     list.append(ui->pathToFile->toPlainText());
+    list.append(ui->genero->toPlainText());
     return list;
 }
 
@@ -52,5 +53,6 @@ void AddMusicForm::on_buttonBox_clicked(QAbstractButton *button)
         ui->pathToFile->setText("");
         ui->nome->setText("");
         ui->artistas->setText("");
+        ui->genero->setText("");
     }
 }

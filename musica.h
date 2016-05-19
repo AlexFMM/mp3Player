@@ -11,8 +11,7 @@ public:
     Musica();
     Musica(QString nome, QString file, QList<QString> artistas);
     Musica(QString nome, QString file, QList<QString> artistas, QString genero);
-    Musica(const char *nome, const char *file, const char *artistas, const char *genero);
-    Musica(const char * file);
+    Musica(QString nome, QString file, QString artistas, QString genero, QDate data);
     ~Musica();
     void setNome(QString);
     void setFileName(QString);

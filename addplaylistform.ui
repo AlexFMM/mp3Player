@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>AddMusicForm</class>
- <widget class="QDialog" name="AddMusicForm">
+ <class>AddPlaylistForm</class>
+ <widget class="QDialog" name="AddPlaylistForm">
   <property name="windowModality">
    <enum>Qt::NonModal</enum>
   </property>
@@ -38,10 +38,10 @@
      <x>10</x>
      <y>0</y>
      <width>421</width>
-     <height>221</height>
+     <height>211</height>
     </rect>
    </property>
-   <layout class="QVBoxLayout" name="verticalLayout" stretch="1,1,1,1,1">
+   <layout class="QVBoxLayout" name="verticalLayout" stretch="1,1,1">
     <property name="spacing">
      <number>1</number>
     </property>
@@ -72,7 +72,7 @@
          </font>
         </property>
         <property name="text">
-         <string>Nova Musica</string>
+         <string>Nova Playlist</string>
         </property>
         <property name="textFormat">
          <enum>Qt::AutoText</enum>
@@ -152,12 +152,12 @@
          </size>
         </property>
         <property name="text">
-         <string>Artista(s)</string>
+         <string>Descrição</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QTextEdit" name="artistas">
+       <widget class="QTextEdit" name="descricao">
         <property name="minimumSize">
          <size>
           <width>0</width>
@@ -172,97 +172,6 @@
         </property>
         <property name="tabChangesFocus">
          <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </item>
-    <item>
-     <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="1,5">
-      <item>
-       <widget class="QLabel" name="label_5">
-        <property name="minimumSize">
-         <size>
-          <width>69</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>69</width>
-          <height>16777215</height>
-         </size>
-        </property>
-        <property name="text">
-         <string>Genero</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QTextEdit" name="genero">
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>25</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>16777215</width>
-          <height>25</height>
-         </size>
-        </property>
-        <property name="tabChangesFocus">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </item>
-    <item>
-     <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="1,4,1">
-      <item>
-       <widget class="QLabel" name="label_4">
-        <property name="minimumSize">
-         <size>
-          <width>69</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>69</width>
-          <height>16777215</height>
-         </size>
-        </property>
-        <property name="text">
-         <string>Caminho</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QTextEdit" name="pathToFile">
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>25</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>16777215</width>
-          <height>25</height>
-         </size>
-        </property>
-        <property name="tabChangesFocus">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="pushButton">
-        <property name="text">
-         <string>Browse</string>
         </property>
        </widget>
       </item>

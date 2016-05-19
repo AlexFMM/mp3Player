@@ -17,16 +17,14 @@ public:
     void setImagePath(QString);
     QString getImagePath();
     void addMusica(Musica*);
-    Musica* getSong(int id);
-    int getTotalSongs();
     QString getNome();
     QString getDescricao();
+    QList<Musica*> songs;
 
 private:
     QString nome;
     QString descricao;
     QString imageFile;
-    QList<Musica*> songs;
 };
 
 #endif // ALBUM_H
