@@ -1,4 +1,3 @@
-#include "mainwindow.h"
 #include "config.h"
 #include "ui_config.h"
 #include <QFileDialog>
