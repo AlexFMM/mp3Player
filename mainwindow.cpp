@@ -9,14 +9,23 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    folder = "C:/Users/Filipe/Desktop/songs/albuns";
 
-    QDir dir("C:/Users/Filipe/Desktop/songs/albuns");
+    QDir dir(folder);
     if (!dir.exists() ) {
-        dir.mkpath("C:/Users/Filipe/Desktop/songs/albuns");
+        dir.mkpath(folder);
+
 
 
     }
 
+
+
+
+
+
+
+    QFile::copy("C:/Users/Filipe/Downloads/caucenus.png","C:/Users/Filipe/Desktop");
 
    /* if (!db.exists()){
         db = QSqlDatabase::addDatabase("QSQLITE");
