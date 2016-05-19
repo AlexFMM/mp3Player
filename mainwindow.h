@@ -11,6 +11,7 @@
 #include <QStandardItem>
 #include <QStandardItemModel>
 #include <QMessageBox>
+#include <QInputDialog>
 #include <QListWidgetItem>
 #include <QtSql>
 
@@ -70,6 +71,7 @@ private:
     void updatePlaylist();
     void createDB();
     void readFromDB();
+    void reloadPlaylists();
     bool removeAlbum(int);
     bool removeMusica(int, int);
     bool removePlaylist(int);

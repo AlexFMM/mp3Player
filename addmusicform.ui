@@ -270,6 +270,19 @@
     </item>
    </layout>
   </widget>
+  <widget class="QCheckBox" name="batchAdd">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>230</y>
+     <width>151</width>
+     <height>19</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Adicionar várias músicas</string>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>

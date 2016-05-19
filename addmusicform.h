@@ -22,6 +22,8 @@ private slots:
     void on_pushButton_clicked();
     void on_buttonBox_clicked(QAbstractButton *button);
 
+    void on_batchAdd_toggled(bool checked);
+
 private:
     Ui::AddMusicForm *ui;
 };
