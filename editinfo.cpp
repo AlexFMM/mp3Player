@@ -47,6 +47,19 @@ void EditInfo::setData(int type, Album *alb){
     }
 }
 
+void EditInfo::setData(int type, Playlist *play){
+    if(type == 3){
+        ui->browseButton->hide();
+        ui->albumImage->hide();
+        ui->lImage->hide();
+        ui->imageFile->hide();
+        ui->title->setText(play->getNome());
+        ui->nome->setText(play->getNome());
+        ui->lSecondary->setText("Descrição");
+        ui->descricao->setText(play->getDescricao());
+    }
+}
+
 QList<QString> EditInfo::getData(){
     QList<QString> list;
     list.append(QString::number(this->type));
@@ -78,4 +91,11 @@ void EditInfo::on_pushButton_clicked()
 {
     ui->nome->setText("_rem_");
     this->done(QDialog::Accepted);
+}
+
+void EditInfo::on_browseButton_clicked()
+{
+    QString fileName = QFileDialog::getOpenFileName(this,
+        "Open Image file", "c:/", "Image Files (*.jpg)");
+    ui->imageFile->setText(fileName);
 }
