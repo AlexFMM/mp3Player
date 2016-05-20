@@ -17,6 +17,7 @@
 #include <QInputDialog>
 #include <QListWidgetItem>
 #include <QtSql>
+#include <QDir>
 
 #include "album.h"
 #include "playlist.h"
@@ -53,7 +54,7 @@ private slots:
     void setEndTime();
     void songEnd();
     void changeList();
-    void checkPlayLists();
+    void changePlayLists();
     void dialogAlbumFinished(int);
     void dialogMusicFinished(int);
     void dialogEditFinished(int);
@@ -75,12 +76,14 @@ private:
     void updateAlbumList();
     void updateSongList(int);
     void updatePlaylist();
+    void updatePlaylistSongs(int);
     void createDB();
     void readFromDB();
     void reloadPlaylists();
     bool removeAlbum(int);
     bool removeMusica(int, int);
     bool removePlaylist(int);
+    bool removeFromPLaylist(int, int);
     Ui::MainWindow *ui;
     QMediaPlayer *player;
     QMediaPlaylist *playlist;

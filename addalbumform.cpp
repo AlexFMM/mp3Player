@@ -31,7 +31,7 @@ AddAlbumForm::~AddAlbumForm()
 void AddAlbumForm::on_pushButton_clicked()
 {
     QString fileName = QFileDialog::getOpenFileName(this,
-        "Open Image file", "c:/", "Image Files (*.jpg)");
+        "Open Image file", "c:/", "Image Files (*.jpg *.png)");
     ui->imageFile->setText(fileName);
 }
 /*!
