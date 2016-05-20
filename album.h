@@ -1,10 +1,16 @@
+/*!
+  * \file album.h
+*/
 #ifndef ALBUM_H
 #define ALBUM_H
 
 #include "musica.h"
-
+/*!
+ * \brief The Album class Classe descritiva de um álbum
+ */
 class Album
 {
+
 public:
     Album();
     Album(QString nome, QString descricao);

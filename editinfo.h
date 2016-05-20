@@ -1,5 +1,8 @@
 #ifndef EDITINFO_H
 #define EDITINFO_H
+/*!
+  * \file editinfo.h
+*/
 
 #include <QDialog>
 #include <QFileDialog>
@@ -11,7 +14,9 @@
 namespace Ui {
 class EditInfo;
 }
-
+/*!
+ * \brief The EditInfo class Classe de edição de váriaveis informativas de álbuns, músicas e playlists
+ */
 class EditInfo : public QDialog
 {
     Q_OBJECT

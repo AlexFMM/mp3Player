@@ -1,12 +1,17 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
+/*!
+  * \file config.h
+*/
 #include <QDialog>
 
 namespace Ui {
 class Config;
 }
-
+/*!
+ * \brief The Config class Classe de configurações do player
+ */
 class Config : public QDialog
 {
     Q_OBJECT

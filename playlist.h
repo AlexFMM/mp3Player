@@ -1,9 +1,13 @@
 #ifndef PLAYLIST_H
 #define PLAYLIST_H
-
+/*!
+  * \file playlist.h
+*/
 #include <QString>
 #include <QList>
-
+/*!
+ * \brief The Playlist class Classe descritiva de uma música
+ */
 class Playlist
 {
 public:

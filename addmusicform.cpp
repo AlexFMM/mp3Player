@@ -1,6 +1,13 @@
+/*!
+  * \file addmusicform.cpp
+*/
+
 #include "addmusicform.h"
 #include "ui_addmusicform.h"
-
+/*!
+ * \brief AddMusicForm::AddMusicForm Cria janela de adição de música
+ * \param parent
+ */
 AddMusicForm::AddMusicForm(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::AddMusicForm)
@@ -11,12 +18,16 @@ AddMusicForm::AddMusicForm(QWidget *parent) :
     setWindowFlags( flags );
     ui->setupUi(this);
 }
-
+/*!
+ * \brief AddMusicForm::~AddMusicForm Elimina janela de adição de música
+ */
 AddMusicForm::~AddMusicForm()
 {
     delete ui;
 }
-
+/*!
+ * \brief AddMusicForm::on_pushButton_clicked Na adição de músicas que podem ser aceites fica limitada apenas a .mp3
+ */
 void AddMusicForm::on_pushButton_clicked()
 {
     QString fileName;
@@ -36,7 +47,10 @@ void AddMusicForm::on_pushButton_clicked()
     }
     ui->pathToFile->setText(fileName);
 }
-
+/*!
+ * \brief AddMusicForm::getInfo Lista de obtenção de informações da música
+ * \return Retorna lista de informações da música
+ */
 QList<QString> AddMusicForm::getInfo(){
     QList<QString> list;
     if(ui->batchAdd->checkState() == Qt::Checked){
@@ -51,7 +65,10 @@ QList<QString> AddMusicForm::getInfo(){
     }
     return list;
 }
-
+/*!
+ * \brief AddMusicForm::on_buttonBox_clicked Botão de confirmação de informações
+ * \param button Retorna informações da música
+ */
 void AddMusicForm::on_buttonBox_clicked(QAbstractButton *button)
 {
     if(button->text() != "OK"){
@@ -83,7 +100,10 @@ void AddMusicForm::on_buttonBox_clicked(QAbstractButton *button)
         ui->genero->setText("");
     }
 }
-
+/*!
+ * \brief AddMusicForm::on_batchAdd_toggled
+ * \param checked
+ */
 void AddMusicForm::on_batchAdd_toggled(bool checked)
 {
     if(checked){

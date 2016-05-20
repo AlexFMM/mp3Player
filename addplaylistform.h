@@ -1,6 +1,9 @@
 #ifndef ADDPLAYLISTFORM_H
 #define ADDPLAYLISTFORM_H
 
+/*!
+  * \file addplaylistform.h
+*/
 #include <QDialog>
 #include <QFileDialog>
 #include <QMessageBox>
@@ -9,7 +12,9 @@
 namespace Ui {
 class AddPlaylistForm;
 }
-
+/*!
+ * \brief The AddPlaylistForm class Adiciona uma playlist
+ */
 class AddPlaylistForm : public QDialog
 {
     Q_OBJECT

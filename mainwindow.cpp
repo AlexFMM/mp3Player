@@ -1,8 +1,14 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+/*!
+  * \file mainwindow.cpp
+*/
 
 #include <QCoreApplication>
-
+/*!
+ * \brief MainWindow::MainWindow Criação da janela principal do programa
+ * \param parent
+ */
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -11,7 +17,7 @@ MainWindow::MainWindow(QWidget *parent) :
     folder = "C:/";
 
     db = QSqlDatabase::addDatabase("QSQLITE");
-    db.setDatabaseName("C:/Users/alexf/Documents/QT/MusicPlayer/player.db");
+    db.setDatabaseName("C:/Users/Filipe/Desktop/mp3Player");
     if (!db.open()){
         QMessageBox::information(this, "Alerta"
                                 , "Não foi encontrada base de dados, vai ser ciada uma.");
@@ -97,7 +103,9 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(playlist, SIGNAL(currentIndexChanged(int)),
                         this, SLOT(changeInfo()));
 }
-
+/*!
+ * \brief MainWindow::~MainWindow Eliminação da janela principal do programa
+ */
 MainWindow::~MainWindow()
 {
     db.close();
@@ -106,7 +114,9 @@ MainWindow::~MainWindow()
     delete addAlbum;
     delete addSong;
 }
-
+/*!
+ * \brief MainWindow::play Reprodução de música
+ */
 void MainWindow::play(){
     if(player->state() == QMediaPlayer::PlayingState){
         player->pause();
@@ -119,7 +129,9 @@ void MainWindow::play(){
         player->play();
     }
 }
-
+/*!
+ * \brief MainWindow::songEnd Fim de música
+ */
 void MainWindow::songEnd(){
     if(player->state() == QMediaPlayer::StoppedState){
         ui->playToggle->setText("Play");
@@ -131,11 +143,15 @@ void MainWindow::songEnd(){
         ui->playToggle->setText("Pause");
     }
 }
-
+/*!
+ * \brief MainWindow::setVolume Ajustador de volume
+ */
 void MainWindow::setVolume(){
     player->setVolume(ui->volumeSlider->value());
 }
-
+/*!
+ * \brief MainWindow::setEndTime Tempo de fim da música
+ */
 void MainWindow::setEndTime(){
     int duration = player->duration();
     int seconds = (duration/1000) % 60;
@@ -152,7 +168,9 @@ void MainWindow::setEndTime(){
     ui->totalTime->setText(time);
     ui->songPosition->setMaximum(duration);
 }
-
+/*!
+ * \brief MainWindow::setBarPosition Posição da barra de progresso da música
+ */
 void MainWindow::setBarPosition(){
     int duration = player->duration();
     if(duration == 0)
@@ -173,11 +191,15 @@ void MainWindow::setBarPosition(){
     if (!moving)
         ui->songPosition->setValue(position);
 }
-
+/*!
+ * \brief MainWindow::setSongPosition posição da música
+ */
 void MainWindow::setSongPosition(){
     player->play();
 }
-
+/*!
+ * \brief MainWindow::movingSlider Controlo da barra de progresso da música
+ */
 void MainWindow::movingSlider(){
     player->pause();
     moving = true;
@@ -266,7 +288,9 @@ void MainWindow::changeList(){
     }
 }
 
-///
+/*!
+ * \brief MainWindow::checkPlayLists Verificação de existência de playlists criadas
+ */
 void MainWindow::checkPlayLists(){
     int sel=ui->listPlay->currentIndex().row();
     if (ui->listPlay->model() == playModel){
@@ -673,7 +697,9 @@ void MainWindow::readFromDB(){
         }
     }
 }
-
+/*!
+ * \brief MainWindow::reloadPlaylists Carrega playlists
+ */
 void MainWindow::reloadPlaylists(){
     playlists.clear();
     QSqlQuery query;
@@ -886,7 +912,10 @@ void MainWindow::ProvideContextMenu(const QPoint &pos){
         }
     }
 }
-
+/*!
+ * \brief MainWindow::ProvideContextMenuPlay
+ * \param pos
+ */
 void MainWindow::ProvideContextMenuPlay(const QPoint &pos){
     QPoint item = ui->listPlay->mapToGlobal(pos);
     QMenu submenu;
@@ -1044,7 +1073,11 @@ bool MainWindow::removeAlbum(int alb){
     query.exec();
     return res;
 }
-
+/*!
+ * \brief MainWindow::removePlaylist Remove playlist
+ * \param p
+ * \return
+ */
 bool MainWindow::removePlaylist(int p){
     QSqlQuery query;
     //Use the name and description to delete the album from the database
@@ -1056,7 +1089,9 @@ bool MainWindow::removePlaylist(int p){
     updatePlaylist();
     return res;
 }
-
+/*!
+ * \brief MainWindow::on_next_clicked
+ */
 void MainWindow::on_next_clicked()
 {
     if(playlist->nextIndex() == -1){
@@ -1064,7 +1099,9 @@ void MainWindow::on_next_clicked()
     }
     playlist->next();
 }
-
+/*!
+ * \brief MainWindow::on_prev_clicked
+ */
 void MainWindow::on_prev_clicked()
 {
     if(playlist->nextIndex() == -1){
@@ -1072,7 +1109,9 @@ void MainWindow::on_prev_clicked()
     }
     playlist->previous();
 }
-
+/*!
+ * \brief MainWindow::on_repetir_clicked
+ */
 void MainWindow::on_repetir_clicked()
 {
     int rep = playlist->playbackMode();
@@ -1092,7 +1131,9 @@ void MainWindow::on_repetir_clicked()
     else
         playlist->setPlaybackMode(QMediaPlaylist::CurrentItemOnce);
 }
-
+/*!
+ * \brief MainWindow::changeInfo
+ */
 void MainWindow::changeInfo(){
     int id = playlist->currentIndex();
     if(id <= 0){
@@ -1102,7 +1143,9 @@ void MainWindow::changeInfo(){
     ui->songArtist->setText(albuns[activeAlbum]->songs.at(id)->getArtistas());
     ui->albumImage->setPixmap(QPixmap(albuns[activeAlbum]->getImagePath()));
 }
-
+/*!
+ * \brief MainWindow::on_aleatorio_clicked Ativado o modo aleatório
+ */
 void MainWindow::on_aleatorio_clicked()
 {
     int rep = playlist->playbackMode();
@@ -1126,12 +1169,17 @@ void MainWindow::on_aleatorio_clicked()
         ui->aleatorio->setText("Sequencial");
     }
 }
-
+/*!
+ * \brief MainWindow::on_btnAddPlay_clicked Botão de reprodução
+ */
 void MainWindow::on_btnAddPlay_clicked()
 {
     addPlay->exec();
 }
-
+/*!
+ * \brief MainWindow::dialogPlayListFinished
+ * \param result
+ */
 void MainWindow::dialogPlayListFinished(int result){
     if(result == QDialog::Accepted){
         QList<QString> list = addPlay->getInfo();

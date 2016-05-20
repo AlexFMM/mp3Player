@@ -1,6 +1,8 @@
 #ifndef ADDALBUMFORM_H
 #define ADDALBUMFORM_H
-
+/*!
+  * \file addalbumform.h
+*/
 #include <QDialog>
 #include <QFileDialog>
 #include <QMessageBox>
@@ -8,7 +10,9 @@
 namespace Ui {
 class AddAlbumForm;
 }
-
+/*!
+ * \brief The AddAlbumForm class Classe de adição de um álbum
+ */
 class AddAlbumForm : public QDialog
 {
     Q_OBJECT

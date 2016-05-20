@@ -1,5 +1,8 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
+/*!
+  * \file mainwindow.h
+*/
 
 #include <QString>
 
@@ -26,6 +29,9 @@
 namespace Ui {
 class MainWindow;
 }
+/*!
+ * \brief The MainWindow class Main Class
+ */
 
 class MainWindow : public QMainWindow
 {

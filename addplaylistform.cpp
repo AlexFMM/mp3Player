@@ -1,6 +1,15 @@
+
+/*!
+  * \file addplaylistform.cpp
+*/
+
+
 #include "addplaylistform.h"
 #include "ui_addplaylistform.h"
-
+/*!
+ * \brief AddPlaylistForm::AddPlaylistForm Cria janela de adição de playlist
+ * \param parent
+ */
 AddPlaylistForm::AddPlaylistForm(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::AddPlaylistForm)
@@ -11,19 +20,27 @@ AddPlaylistForm::AddPlaylistForm(QWidget *parent) :
     setWindowFlags( flags );
     ui->setupUi(this);
 }
-
+/*!
+ * \brief AddPlaylistForm::~AddPlaylistForm Elimina janela de adição de playlist
+ */
 AddPlaylistForm::~AddPlaylistForm()
 {
     delete ui;
 }
-
+/*!
+ * \brief AddPlaylistForm::getInfo Obtém informações das playlists
+ * \return
+ */
 QList<QString> AddPlaylistForm::getInfo(){
     QList<QString> list;
     list.append(ui->nome->toPlainText());
     list.append(ui->descricao->toPlainText());
     return list;
 }
-
+/*!
+ * \brief AddPlaylistForm::on_buttonBox_clicked Cria uma playlist
+ * \param button
+ */
 void AddPlaylistForm::on_buttonBox_clicked(QAbstractButton *button)
 {
     if(button->text() != "OK"){

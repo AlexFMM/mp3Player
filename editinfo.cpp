@@ -1,6 +1,14 @@
+/*!
+  * \file editinfo.cpp
+*/
+
+
 #include "editinfo.h"
 #include "ui_editinfo.h"
-
+/*!
+ * \brief EditInfo::EditInfo Cria janela de edição de parâmetros
+ * \param parent
+ */
 EditInfo::EditInfo(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::EditInfo)
@@ -11,12 +19,18 @@ EditInfo::EditInfo(QWidget *parent) :
     setWindowFlags( flags );
     ui->setupUi(this);
 }
-
+/*!
+ * \brief EditInfo::~EditInfo Elimina janela de ediçaõ de parâmetros
+ */
 EditInfo::~EditInfo()
 {
     delete ui;
 }
-
+/*!
+ * \brief EditInfo::setData Altera dados de uma música
+ * \param type Variável de inficação de música, álbum ou playlist
+ * \param song Variável música a editar
+ */
 void EditInfo::setData(int type, Musica *song){
     if(type == 1){
         this->type = type;
@@ -30,7 +44,11 @@ void EditInfo::setData(int type, Musica *song){
         ui->imageFile->setText(song->getGenero());
     }
 }
-
+/*!
+ * \brief EditInfo::setData
+ * \param type Variável de inficação de música, álbum ou playlist
+ * \param alb Variável álbum a editar
+ */
 void EditInfo::setData(int type, Album *alb){
     if(type == 2){
         this->type = type;
@@ -46,7 +64,11 @@ void EditInfo::setData(int type, Album *alb){
         ui->albumImage->setPixmap(alb->getImagePath());
     }
 }
-
+/*!
+ * \brief EditInfo::setData
+ * \param type Variável de inficação de música, álbum ou playlist
+ * \param play Variável playlist a editar
+ */
 void EditInfo::setData(int type, Playlist *play){
     if(type == 3){
         ui->browseButton->hide();
@@ -59,7 +81,10 @@ void EditInfo::setData(int type, Playlist *play){
         ui->descricao->setText(play->getDescricao());
     }
 }
-
+/*!
+ * \brief EditInfo::getData Carrega dados de um álbum
+ * \return Retorna dados de um álbum
+ */
 QList<QString> EditInfo::getData(){
     QList<QString> list;
     list.append(QString::number(this->type));
@@ -69,7 +94,10 @@ QList<QString> EditInfo::getData(){
     return list;
 }
 
-
+/*!
+ * \brief EditInfo::on_buttonBox_clicked Verificação de coerência de dados
+ * \param button Botão de confirmação
+ */
 void EditInfo::on_buttonBox_clicked(QAbstractButton *button)
 {
     if(button->text() != "OK"){
@@ -86,13 +114,17 @@ void EditInfo::on_buttonBox_clicked(QAbstractButton *button)
         this->done(QDialog::Accepted);
     }
 }
-
+/*!
+ * \brief EditInfo::on_pushButton_clicked
+ */
 void EditInfo::on_pushButton_clicked()
 {
     ui->nome->setText("_rem_");
     this->done(QDialog::Accepted);
 }
-
+/*!
+ * \brief EditInfo::on_browseButton_clicked
+ */
 void EditInfo::on_browseButton_clicked()
 {
     QString fileName = QFileDialog::getOpenFileName(this,

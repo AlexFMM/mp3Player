@@ -1,5 +1,8 @@
 #ifndef ADDMUSICFORM_H
 #define ADDMUSICFORM_H
+/*!
+  * \file addmusicform.h
+*/
 
 #include <QDialog>
 #include <QFileDialog>
@@ -8,9 +11,12 @@
 namespace Ui {
 class AddMusicForm;
 }
-
+/*!
+ * \brief The AddMusicForm class Classe de adição de uma música
+ */
 class AddMusicForm : public QDialog
 {
+
     Q_OBJECT
 
 public:

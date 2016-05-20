@@ -1,10 +1,14 @@
 #ifndef MUSICA_H
 #define MUSICA_H
-
+/*!
+  * \file musica.h
+*/
 #include <QList>
 #include <QString>
 #include <QDate>
-
+/*!
+ * \brief The Musica class Classe descritiva de uma música
+ */
 class Musica
 {
 public:
