@@ -11,7 +11,11 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MusicPlayer</string>
+   <string>.Play</string>
+  </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>icon.png</normaloff>icon.png</iconset>
   </property>
   <property name="styleSheet">
    <string notr="true"/>
@@ -515,7 +519,7 @@
        <attribute name="title">
         <string>Albuns</string>
        </attribute>
-       <widget class="QListView" name="listObjs">
+       <widget class="QTableView" name="listObjs">
         <property name="geometry">
          <rect>
           <x>0</x>

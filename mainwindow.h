@@ -18,6 +18,7 @@
 #include <QListWidgetItem>
 #include <QtSql>
 #include <QDir>
+#include <QStandardPaths>
 
 #include "album.h"
 #include "playlist.h"
@@ -83,13 +84,14 @@ private:
     bool removeAlbum(int);
     bool removeMusica(int, int);
     bool removePlaylist(int);
-    bool removeFromPLaylist(int, int);
+    bool removeFromPlaylist(int, int);
     Ui::MainWindow *ui;
     QMediaPlayer *player;
     QMediaPlaylist *playlist;
     bool moving;
     bool menu;
     bool playList;
+    bool confirmed;
     int idSong;
     int activeAlbum;
     int activePlay;

@@ -14,13 +14,13 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    folder = "C:/songs";
 
-    if(!QDir(folder).exists())
-        QDir().mkdir(folder);
-
+    QString dbLoc = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation)
+                                            + QDir::separator() + "dotPlay";
+    if(!QDir(dbLoc).exists())
+        QDir().mkdir(dbLoc);
     db = QSqlDatabase::addDatabase("QSQLITE");
-    db.setDatabaseName(folder + QDir::separator() + "player.db");
+    db.setDatabaseName(dbLoc + QDir::separator() + "player.db");
     db.open();
     if (db.tables().size() == 0){
         QMessageBox::information(this, "Primeira Utilização"
@@ -30,6 +30,13 @@ MainWindow::MainWindow(QWidget *parent) :
     else{
         readFromDB();
     }
+
+    confirmed = false;
+
+    this->setWindowIcon(QIcon("icon.ico"));
+
+    if(!QDir(folder).exists())
+        QDir().mkdir(folder);
 
     addAlbum = new AddAlbumForm();
     addSong = new AddMusicForm();
@@ -54,9 +61,14 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->listPlay->setMovement(QListView::Static);
     ui->listPlay->setEditTriggers(QAbstractItemView::NoEditTriggers);
     ui->listObjs->setModel(albumModel);
-    ui->listObjs->setViewMode(QListView::IconMode);
+    ui->listObjs->horizontalHeader()->hide();
+    ui->listObjs->verticalHeader()->hide();
+    ui->listObjs->setSelectionBehavior(QAbstractItemView::SelectRows);
+    //ui->listObjs->setViewMode(QListView::IconMode);
+    ui->listObjs->setShowGrid(false);
+
     ui->listObjs->setIconSize(QSize(80, 80));
-    ui->listObjs->setMovement(QListView::Static);
+    //ui->listObjs->setMovement(QListView::Static);
     ui->listObjs->setEditTriggers(QAbstractItemView::NoEditTriggers);
     selAlbum = -1;
     selPlay = -1;
@@ -68,6 +80,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->volumeSlider->setValue(100);
     ui->repetir->setText("Não repetir");
     ui->aleatorio->setText("Sequencial");
+
+    ui->songArtist->setText(folder);
 
     //connect the events
     connect(ui->playToggle,SIGNAL(clicked()),
@@ -215,14 +229,15 @@ void MainWindow::movingSlider(){
 //Handle the keyboard press event
 void MainWindow::keyPressEvent(QKeyEvent *keyevent){
     //Media Play/Pause and the space key toggle the play status
-    if(keyevent->key() == Qt::Key_MediaTogglePlayPause
-                                    || keyevent->key() == Qt::Key_Space){
+    if(keyevent->key() == Qt::Key_MediaTogglePlayPause ||
+        keyevent->modifiers() == Qt::ControlModifier
+                                            && keyevent->key() == Qt::Key_P){
         play();
     }
     //Esc key resets the listView
     else if(keyevent->key() == Qt::Key_Escape){
         ui->listObjs->setModel(albumModel);
-        ui->listObjs->setViewMode(QListView::IconMode);
+        //ui->listObjs->setViewMode(QListView::IconMode);
         selAlbum = -1;
     }
     else if(keyevent->key() == Qt::Key_Enter
@@ -234,6 +249,16 @@ void MainWindow::keyPressEvent(QKeyEvent *keyevent){
     if(keyevent->modifiers() == Qt::ControlModifier
                                     && keyevent->key() == Qt::Key_F){
         ui->searchBox->setFocus();
+    }
+    //Use the combo Ctrl+X to go to th next song
+    if(keyevent->modifiers() == Qt::ControlModifier
+                                    && keyevent->key() == Qt::Key_X){
+        on_next_clicked();
+    }
+    //Use the combo Ctrl+Z to go to the previus song
+    if(keyevent->modifiers() == Qt::ControlModifier
+                                    && keyevent->key() == Qt::Key_Z){
+        on_prev_clicked();
     }
 }
 
@@ -262,7 +287,7 @@ void MainWindow::changeList(){
         if(sel == 0){///if the item pressed is the first "back" go back to
                      ///list of all the albums
             ui->listObjs->setModel(albumModel);
-            ui->listObjs->setViewMode(QListView::IconMode);
+            //ui->listObjs->setViewMode(QListView::IconMode);
             selAlbum = -1;
             return;
         }
@@ -275,7 +300,8 @@ void MainWindow::changeList(){
         player->stop();
         if(!playlist->isEmpty())
             playlist->clear();
-        QString file =  albuns[selAlbum]->songs.at(sel-2)->getFileName();
+        QString file =  folder + QDir::separator() + QString::number(selAlbum)
+                + QDir::separator() + QString::number(sel-2) + ".mp3";
         playlist->addMedia(QUrl::fromLocalFile(file));
         ui->songName->setText(albuns[selAlbum]->songs.at(sel-2)->getName());
         ui->songArtist->setText(albuns[selAlbum]->songs.at(sel-2)->getArtistas());
@@ -292,7 +318,7 @@ void MainWindow::changeList(){
         selAlbum = sel;
         updateSongList(selAlbum);
         ui->listObjs->setModel(tempSong);
-        ui->listObjs->setViewMode(QListView::ListMode);
+        //ui->listObjs->setViewMode(QListView::ListMode);
     }
 }
 
@@ -323,17 +349,17 @@ void MainWindow::changePlayLists(){
         player->stop();
         playlist->clear();
         QString file;
-        for(int i = 0; i < playlists[selPlay]->getTot(); i++){
+        for(int i = sel; i < playlists[selPlay]->getTot(); i++){
             QList<int> l = playlists[selPlay]->getSong(i);
             file =  albuns[l[0]]->songs.at(l[1])->getFileName();
+            file = folder + QDir::separator() + QString::number(l[0])
+                    + QDir::separator() + QString::number(l[1]) + ".mp3";
             playlist->addMedia(QUrl::fromLocalFile(file));
         }
         QList<int> l = playlists[selPlay]->getSong(sel);
-        playlist->addMedia(QUrl::fromLocalFile(file));
         ui->songName->setText(albuns[l[0]]->songs.at(l[1])->getName());
         ui->songArtist->setText(albuns[l[0]]->songs.at(l[1])->getArtistas());
         ui->albumImage->setPixmap(QPixmap(albuns[l[0]]->getImagePath()));
-        playlist->setCurrentIndex(sel);
         playList=true;
         activePlay = selPlay;
         play();
@@ -401,6 +427,8 @@ void MainWindow::dialogAlbumFinished(int result){
             query.bindValue(":i", "");
             query.exec();
         }
+        QDir().mkdir(folder + QDir::separator() +
+                                        QString::number(albuns.count()-1));
         updateAlbumList();
         db.commit();
     }
@@ -420,13 +448,15 @@ void MainWindow::dialogMusicFinished(int result){
                  albuns[selAlbum]->addMusica(new Musica(noInfo, songs[i]
                                                             ,noInfo, noInfo));
                  //Insert the information in the database
-
+                 QString aux = folder + QDir::separator() + QString::number(selAlbum) +
+                         QDir::separator() + QString::number(albuns[selAlbum]->songs.count()-1) + ".mp3";
+                 QFile::copy(songs[i], aux);
                  query.prepare("INSERT INTO Musica (Name, Artists, FilePath,"
                                " Genre, DateAdded, Album, ID, Playlist) VALUES "
                                "(:n, :a, :f, :g, :d, :al, :i, :p)");
                  query.bindValue(":n", noInfo);
                  query.bindValue(":a", noInfo);
-                 query.bindValue(":f", songs[i]);
+                 query.bindValue(":f", aux);
                  query.bindValue(":g", noInfo);
                  query.bindValue(":d", albuns[selAlbum]->songs.last()->getDate());
                  query.bindValue(":al", selAlbum);
@@ -446,6 +476,10 @@ void MainWindow::dialogMusicFinished(int result){
             //list[2] = list[2].replace(folder, "");
             albuns[selAlbum]->addMusica(new Musica(list[0], list[2],
                                                                    l, list[3]));
+            QString aux = folder + QDir::separator() + QString::number(selAlbum)
+                    + QDir::separator() + QString::number(albuns[selAlbum]->songs.count()-1)
+                                                                       + ".mp3";
+            QFile::copy(list[2], aux);
             //Insert the information in the database
             QSqlQuery query;
             query.prepare("INSERT INTO Musica (Name, Artists, FilePath,"
@@ -453,7 +487,7 @@ void MainWindow::dialogMusicFinished(int result){
                           "(:n, :a, :f, :g, :d, :al, :i, :p)");
             query.bindValue(":n", list[0]);
             query.bindValue(":a", list[1]);
-            query.bindValue(":f", list[2]);
+            query.bindValue(":f", aux);
             query.bindValue(":g", list[3]);
             query.bindValue(":d", albuns[selAlbum]->songs.last()->getDate());
             query.bindValue(":al", selAlbum);
@@ -481,7 +515,7 @@ void MainWindow::dialogEditFinished(int result){
             else if(type == 2){
                 removeAlbum(selAlbum);
                 ui->listObjs->setModel(albumModel);
-                ui->listObjs->setViewMode(QListView::IconMode);
+                //ui->listObjs->setViewMode(QListView::IconMode);
                 selAlbum = -1;
                 return;
             }
@@ -574,34 +608,52 @@ void MainWindow::updatePlaylist(){
 void MainWindow::updateSongList(int alb){
     tempSong->clear();
     QStandardItem *Items;
+    QList<QStandardItem*> listInfo;
+    QList<QStandardItem*> list;
     //Item to go back to the mais screen
     Items = new QStandardItem("Back");
     tempSong->appendRow(Items);
+    tempSong->setColumnCount(3);
     //Informations of the current Album
     int totSongs = albuns[alb]->songs.count();
     if(totSongs == 0){
-        Items = new QStandardItem(albuns[alb]->getNome()+ "\t\t"
+        listInfo.append(new QStandardItem(albuns[alb]->getNome()));
+        listInfo.append(new QStandardItem(albuns[alb]->getDescricao()));
+        listInfo.append(new QStandardItem("Não tem músicas"));
+        /*Items = new QStandardItem(albuns[alb]->getNome()+ "\t\t"
                              + albuns[alb]->getDescricao() + "\t\t"
-                             + "Não tem músicas");
+                             + "Não tem músicas");*/
     }
     else if(albuns[alb]->songs.count() == 1){
-        Items = new QStandardItem(albuns[alb]->getNome()+ "\t\t"
+        listInfo.append(new QStandardItem(albuns[alb]->getNome()));
+        listInfo.append(new QStandardItem(albuns[alb]->getDescricao()));
+        listInfo.append(new QStandardItem("Tem uma música"));
+        /*Items = new QStandardItem(albuns[alb]->getNome()+ "\t\t"
                              + albuns[alb]->getDescricao() + "\t\t"
-                             + "Tem uma música");
+                             + "Tem uma música");*/
     }
     else{
-        Items = new QStandardItem(albuns[alb]->getNome()+ "\t\t"
+        listInfo.append(new QStandardItem(albuns[alb]->getNome()));
+        listInfo.append(new QStandardItem(albuns[alb]->getDescricao()));
+        listInfo.append(new QStandardItem("Tem " + QString::number(totSongs) + " músicas"));
+        /*Items = new QStandardItem(albuns[alb]->getNome()+ "\t\t"
                              + albuns[alb]->getDescricao() + "\t\t"
-                             + "Tem " + QString::number(totSongs) + " músicas");
+                             + "Tem " + QString::number(totSongs) + " músicas");*/
     }
     Items->setIcon(QPixmap(albuns[alb]->getImagePath()));
-    tempSong->appendRow(Items);
+    tempSong->appendRow(listInfo);
+
     //List the songs of the Album
     for(int i=0; i < totSongs; i++){
-        Items = new QStandardItem(albuns[alb]->songs.at(i)->getName() + "\t"
+        list.clear();
+        list.append(new QStandardItem(albuns[alb]->songs.at(i)->getName()));
+        list.append(new QStandardItem(albuns[alb]->songs.at(i)->getArtistas()));
+        list.append(new QStandardItem(albuns[alb]->songs.at(i)->getGenero()));
+
+        /*Items = new QStandardItem(albuns[alb]->songs.at(i)->getName() + "\t"
                              + albuns[alb]->songs.at(i)->getArtistas()
-                             + "\t" + albuns[alb]->songs.at(i)->getGenero());
-        tempSong->appendRow(Items);
+                             + "\t" + albuns[alb]->songs.at(i)->getGenero());*/
+        tempSong->appendRow(list);
     }
 }
 
@@ -636,6 +688,15 @@ void MainWindow::createDB(){
                "Name        STRING,"
                "Description STRING"
            ")");
+    //Create table for the settings
+    query.exec("CREATE TABLE Settings ("
+               "Path        STRING"
+           ")");
+
+    folder = "C:\\songs";
+    query.prepare("INSERT INTO Settings (Path) VALUES (:f)");
+    query.bindValue(":f", folder);
+    query.exec();
 }
 
 ///This function will read the information stored in the SQLite database
@@ -694,6 +755,10 @@ void MainWindow::readFromDB(){
                 playlists[l[i].toInt()]->addSong(id, albuns.at(id)->songs.count()-1);
         }
     }
+    query.exec("SELECT * FROM Settings");
+    query.next();
+    record = query.record();
+    folder = record.value(0).toString();
 }
 /*!
  * \brief MainWindow::reloadPlaylists Carrega playlists
@@ -719,7 +784,7 @@ void MainWindow::search(){
     QString se = ui->searchBox->text();
     if(se.isEmpty()){
         ui->listObjs->setModel(albumModel);
-        ui->listObjs->setViewMode(QListView::IconMode);
+        //ui->listObjs->setViewMode(QListView::IconMode);
         selAlbum = -1;
         searchResultsIds.clear();
         return;
@@ -754,7 +819,7 @@ void MainWindow::search(){
         searchResultsIds.append(id);
     }
     ui->listObjs->setModel(searchResults);
-    ui->listObjs->setViewMode(QListView::ListMode);
+    //ui->listObjs->setViewMode(QListView::ListMode);
 }
 
 ///Create the context menu for the main listView
@@ -784,7 +849,8 @@ void MainWindow::ProvideContextMenu(const QPoint &pos){
             QString file;
             playlist->clear();
             for(int i = 0; i < albuns[selAlbum]->songs.count(); i++){
-                file = albuns[selAlbum]->songs.at(i)->getFileName();
+                file = folder + QDir::separator() + QString::number(selAlbum)
+                        + QDir::separator() + QString::number(i) + ".mp3";
                 playlist->addMedia(QUrl::fromLocalFile(file));
             }
             ui->songName->setText(albuns[selAlbum]->songs.first()->getName());
@@ -848,7 +914,8 @@ void MainWindow::ProvideContextMenu(const QPoint &pos){
                 QString file;
                 playlist->clear();
                 for(int i = 0; i < albuns[selAlbum]->songs.count(); i++){
-                    file = albuns[selAlbum]->songs.at(i)->getFileName();
+                    file = folder + QDir::separator() + QString::number(selAlbum)
+                            + QDir::separator() + QString::number(i) + ".mp3";
                     playlist->addMedia(QUrl::fromLocalFile(file));
                 }
                 ui->songName->setText(albuns[selAlbum]->songs.first()->getName());
@@ -982,12 +1049,16 @@ void MainWindow::ProvideContextMenuPlay(const QPoint &pos){
             for(int i = 0; i < playlists[selPlay]->getTot(); i++){
                 l = playlists[selPlay]->getSong(i);
                 file =  albuns[l[0]]->songs[l[1]]->getFileName();
+                file = folder + QDir::separator() + QString::number(l[0])
+                        + QDir::separator() + QString::number(l[1]) + ".mp3";
                 playlist->addMedia(QUrl::fromLocalFile(file));
             }
             l = playlists[selPlay]->getSong(0);
             ui->songName->setText(albuns[l[0]]->songs[l[1]]->getName());
             ui->songArtist->setText(albuns[l[0]]->songs[l[1]]->getArtistas());
             ui->albumImage->setPixmap(QPixmap(albuns[l[0]]->getImagePath()));
+            playList = true;
+            activePlay = selPlay;
             play();
         }
         else if (rightClickItem && rightClickItem->text().contains("Adicionar")){
@@ -1013,11 +1084,47 @@ void MainWindow::ProvideContextMenuPlay(const QPoint &pos){
     else if(ui->listPlay->model() == tempPlay){//If it's the list of songs
         if(rightClickItem && rightClickItem->text().contains("Play")){
             //Play entire playlist from song
-
+            int sel = ui->listPlay->indexAt(pos).row()-2;
+            player->stop();
+            playlist->clear();
+            QString file;
+            for(int i = 0; i < playlists[selPlay]->getTot(); i++){
+                QList<int> l = playlists[selPlay]->getSong(i);
+                file = folder + QDir::separator() + QString::number(l[0])
+                        + QDir::separator() + QString::number(l[1]) + ".mp3";
+                playlist->addMedia(QUrl::fromLocalFile(file));
+            }
+            QList<int> l = playlists[selPlay]->getSong(sel);
+            ui->songName->setText(albuns[l[0]]->songs.at(l[1])->getName());
+            ui->songArtist->setText(albuns[l[0]]->songs.at(l[1])->getArtistas());
+            ui->albumImage->setPixmap(QPixmap(albuns[l[0]]->getImagePath()));
+            playlist->setCurrentIndex(sel);
+            playList=true;
+            activePlay = selPlay;
+            play();
         }
         else if (rightClickItem && rightClickItem->text().contains("Adicionar")){
             //The add option opens the form to add a song
-            addPlay->exec();
+            QList<QString> songs;
+            QList<int> id;
+            for(int i = 0; i < albuns.count() ; i++){
+                for(int j = 0; j < albuns[i]->songs.count(); j++){
+                    songs.append(albuns[i]->songs[j]->getName() + "   " +
+                                 albuns[i]->songs[j]->getArtistas());
+                    id.append(i);
+                    id.append(j);
+                }
+            }
+            QSqlQuery query;
+            QString aux = QInputDialog::getItem(this, "Escolha a música a dicionar", "Lista de músicas", songs);
+            int loc = songs.indexOf(aux);
+            playlists[selPlay]->addSong(id[loc*2], id[loc*2+1]);
+            query.prepare("UPDATE Musica SET Playlist = Playlist || :p"
+                                           " WHERE Album = :a AND ID = :i");
+            query.bindValue(":p", QString::number(selPlay)+",");
+            query.bindValue(":a", id[loc*2]);
+            query.bindValue(":i", id[loc*2+1]);
+            query.exec();
             return;
         }
         else if (rightClickItem && rightClickItem->text().contains("Editar")){
@@ -1053,6 +1160,15 @@ void MainWindow::ProvideContextMenuPlay(const QPoint &pos){
 /// @param alb an interger that indicates the album
 /// @param song an interger that indicates the song
 bool MainWindow::removeMusica(int alb, int song){
+    if (!confirmed){
+        int reply = QMessageBox::question(this,
+                                    "Remover",
+                                    "Tem a certeza que deseja remover a musica "
+                                    + this->albuns[alb]->songs[song]->getName(),
+                                    QMessageBox::Yes | QMessageBox::No);
+        if(reply == QMessageBox::No)
+            return false;
+    }
     //Removes the song from the program
     albuns[alb]->songs.removeAt(song);
     //Updates the list of songs
@@ -1077,12 +1193,43 @@ bool MainWindow::removeMusica(int alb, int song){
     query.bindValue(":a", alb);
     query.bindValue(":i", song);
     query.exec();
+    if (!confirmed){
+        //remove file
+        QString aux = folder + QDir::separator() + QString::number(alb)
+                           + QDir::separator() + QString::number(song) + ".mp3";
+        QString old;
+        QFile::remove(aux);
+        //update filenames
+        for (int i=song;i<albuns[alb]->songs.count();i++){
+            aux = folder + QDir::separator() + QString::number(alb)
+                              + QDir::separator() + QString::number(i) + ".mp3";
+            old = folder + QDir::separator() + QString::number(alb)
+                            + QDir::separator() + QString::number(i+1) + ".mp3";
+            QFile::rename(old, aux);
+        }
+    }
     return res;
 }
 
 ///Removes an album
 /// @param alb an interger that indicates the album
 bool MainWindow::removeAlbum(int alb){
+    int reply = QMessageBox::question(this,
+                                "Remover",
+                                "Tem a certeza que deseja remover o album "
+                                + this->albuns[alb]->getNome(),
+                                QMessageBox::Yes | QMessageBox::No);
+    if(reply == QMessageBox::No)
+        return false;
+    reply = QMessageBox::question(this,
+                                "Remover",
+                                "Todas as musicas iram ser removidas da aplicação",
+                                QMessageBox::Yes | QMessageBox::No);
+    if(reply == QMessageBox::No)
+        return false;
+    else{
+        confirmed = true;
+    }
     //Save the name and description
     QString auxN, auxD;
     auxN = albuns[alb]->getNome();
@@ -1092,8 +1239,22 @@ bool MainWindow::removeAlbum(int alb){
         //Removes all the songs from the album
         removeMusica(alb, i);
     }
+    confirmed = false;
     //Removes the album from the program
     albuns.removeAt(alb);
+
+    //remove file
+    QString aux = folder + QDir::separator() + QString::number(alb);
+    QString old;
+    QDir(aux).removeRecursively();
+    QDir dir;
+    //update filenames
+    for (int i=alb+1;i<albuns.count()+1;i++){
+        aux = folder + QDir::separator() + QString::number(i-1);
+        old = folder + QDir::separator() + QString::number(i);
+        dir.rename(old,aux);
+    }
+
     //update the album list
     updateAlbumList();
     //Update the database
@@ -1115,7 +1276,7 @@ bool MainWindow::removeAlbum(int alb){
 ///Removes a song from an album
 /// @param p an interger that indicates the playlist
 /// @param id an interger that indicates the song
-bool MainWindow::removeFromPLaylist(int p, int id){
+bool MainWindow::removeFromPlaylist(int p, int id){
     QSqlQuery query;
     QList<int> l = playlists[p]->getSong(id);
     query.prepare("UPDATE Musica SET Playlist = replace(Playlist, :pl, '')"
