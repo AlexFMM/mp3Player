@@ -16,6 +16,12 @@
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">#AddPlaylistForm{
+background: url(:/imagens/backgorund.png);
+
+}</string>
+  </property>
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
     <rect>
@@ -71,6 +77,9 @@
           <bold>true</bold>
          </font>
         </property>
+        <property name="styleSheet">
+         <string notr="true">#label{color: rgb(255, 255, 255)}</string>
+        </property>
         <property name="text">
          <string>Nova Playlist</string>
         </property>
@@ -108,6 +117,14 @@
           <width>69</width>
           <height>75</height>
          </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">#label_2{color: rgb(255, 255, 255)}</string>
         </property>
         <property name="text">
          <string>Nome</string>
@@ -150,6 +167,14 @@
           <width>69</width>
           <height>16777215</height>
          </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">#label_3{color: rgb(255, 255, 255)}</string>
         </property>
         <property name="text">
          <string>Descrição</string>

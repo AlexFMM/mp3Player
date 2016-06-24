@@ -16,6 +16,13 @@
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">#EditInfo{
+background: url(:/imagens/backgorund.png);
+
+
+}</string>
+  </property>
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
     <rect>
@@ -76,6 +83,9 @@
           <weight>75</weight>
           <bold>true</bold>
          </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">#title{color: rgb(255, 255, 255) }</string>
         </property>
         <property name="text">
          <string>Nome Atual</string>
@@ -143,6 +153,14 @@
           <height>75</height>
          </size>
         </property>
+        <property name="font">
+         <font>
+          <pointsize>13</pointsize>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">#lName{color: rgb(255, 255, 255) }</string>
+        </property>
         <property name="text">
          <string>Nome</string>
         </property>
@@ -185,6 +203,14 @@
           <height>16777215</height>
          </size>
         </property>
+        <property name="font">
+         <font>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">#lSecondary{color: rgb(255, 255, 255)}</string>
+        </property>
         <property name="text">
          <string>Descrição</string>
         </property>
@@ -226,6 +252,14 @@
           <width>69</width>
           <height>16777215</height>
          </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">#lImage{color: rgb(255, 255, 255)}</string>
         </property>
         <property name="text">
          <string>Imagem</string>

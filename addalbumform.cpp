@@ -45,6 +45,7 @@ QList<QString> AddAlbumForm::getInfo(){
     if(ui->imageFile->toPlainText() != "")
         list.append(ui->imageFile->toPlainText());
     return list;
+
 }
 /*!
  * \brief AddAlbumForm::on_buttonBox_clicked Botão de confirmação de informações

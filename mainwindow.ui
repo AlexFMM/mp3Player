@@ -18,7 +18,10 @@
     <normaloff>icon.png</normaloff>icon.png</iconset>
   </property>
   <property name="styleSheet">
-   <string notr="true"/>
+   <string notr="true">#MainWindow{
+background: url(:/imagens/backgorund.png);
+
+}</string>
   </property>
   <property name="tabShape">
    <enum>QTabWidget::Rounded</enum>
@@ -95,6 +98,10 @@
             <property name="text">
              <string>Prev</string>
             </property>
+            <property name="icon">
+             <iconset resource="imagens.qrc">
+              <normaloff>:/imagens/prev.png</normaloff>:/imagens/prev.png</iconset>
+            </property>
            </widget>
           </item>
           <item>
@@ -140,6 +147,10 @@
                 </property>
                 <property name="text">
                  <string>Repetir</string>
+                </property>
+                <property name="icon">
+                 <iconset resource="imagens.qrc">
+                  <normaloff>:/imagens/repeat.png</normaloff>:/imagens/repeat.png</iconset>
                 </property>
                </widget>
               </item>
@@ -194,8 +205,25 @@
                   <verstretch>0</verstretch>
                  </sizepolicy>
                 </property>
+                <property name="styleSheet">
+                 <string notr="true"/>
+                </property>
                 <property name="text">
                  <string>Play/Pause</string>
+                </property>
+                <property name="icon">
+                 <iconset resource="imagens.qrc">
+                  <normaloff>:/imagens/play.png</normaloff>
+                  <activeon>:/imagens/pause.png</activeon>:/imagens/play.png</iconset>
+                </property>
+                <property name="checkable">
+                 <bool>false</bool>
+                </property>
+                <property name="checked">
+                 <bool>false</bool>
+                </property>
+                <property name="autoRepeat">
+                 <bool>false</bool>
                 </property>
                </widget>
               </item>
@@ -256,6 +284,10 @@
                 <property name="text">
                  <string>Aleatório</string>
                 </property>
+                <property name="icon">
+                 <iconset resource="imagens.qrc">
+                  <normaloff>:/imagens/shuffle.png</normaloff>:/imagens/shuffle.png</iconset>
+                </property>
                </widget>
               </item>
               <item>
@@ -299,6 +331,10 @@
             <property name="text">
              <string>Next</string>
             </property>
+            <property name="icon">
+             <iconset resource="imagens.qrc">
+              <normaloff>:/imagens/next.png</normaloff>:/imagens/next.png</iconset>
+            </property>
            </widget>
           </item>
          </layout>
@@ -338,6 +374,14 @@
           </property>
           <item>
            <widget class="QLabel" name="songName">
+            <property name="font">
+             <font>
+              <pointsize>12</pointsize>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">#songName{color: rgb(255, 255, 255)}</string>
+            </property>
             <property name="text">
              <string>NomeMusica</string>
             </property>
@@ -345,6 +389,14 @@
           </item>
           <item>
            <widget class="QLabel" name="songArtist">
+            <property name="font">
+             <font>
+              <pointsize>12</pointsize>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">#songArtist{color: rgb(255, 255, 255)}</string>
+            </property>
             <property name="text">
              <string>Artista(s)</string>
             </property>
@@ -354,6 +406,9 @@
            <layout class="QHBoxLayout" name="horizontalLayout_4">
             <item>
              <widget class="QLabel" name="currentTime">
+              <property name="styleSheet">
+               <string notr="true">#currentTime{color: rgb(255, 255, 255)}</string>
+              </property>
               <property name="text">
                <string>0:00</string>
               </property>
@@ -374,6 +429,9 @@
             </item>
             <item>
              <widget class="QLabel" name="totalTime">
+              <property name="styleSheet">
+               <string notr="true">#totalTime{color: rgb(255, 255, 255)}</string>
+              </property>
               <property name="text">
                <string>0:00</string>
               </property>
@@ -483,6 +541,10 @@
         <property name="text">
          <string>Adicionar Album</string>
         </property>
+        <property name="icon">
+         <iconset resource="imagens.qrc">
+          <normaloff>:/imagens/plus.png</normaloff>:/imagens/plus.png</iconset>
+        </property>
        </widget>
       </item>
       <item>
@@ -490,12 +552,20 @@
         <property name="text">
          <string>Adicionar Playlist</string>
         </property>
+        <property name="icon">
+         <iconset resource="imagens.qrc">
+          <normaloff>:/imagens/plus.png</normaloff>:/imagens/plus.png</iconset>
+        </property>
        </widget>
       </item>
       <item>
        <widget class="QPushButton" name="btnAddSong">
         <property name="text">
          <string>Adicionar Musica</string>
+        </property>
+        <property name="icon">
+         <iconset resource="imagens.qrc">
+          <normaloff>:/imagens/plus.png</normaloff>:/imagens/plus.png</iconset>
         </property>
        </widget>
       </item>
@@ -579,7 +649,7 @@
      <x>0</x>
      <y>0</y>
      <width>874</width>
-     <height>20</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFicheiro">
@@ -686,7 +756,9 @@
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <resources/>
+ <resources>
+  <include location="imagens.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>actionExit</sender>

@@ -16,6 +16,10 @@
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">#AddMusicForm{
+background: url(:/imagens/backgorund.png);}</string>
+  </property>
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
     <rect>
@@ -71,6 +75,9 @@
           <bold>true</bold>
          </font>
         </property>
+        <property name="styleSheet">
+         <string notr="true">#label{color: rgb(255, 255, 255)}</string>
+        </property>
         <property name="text">
          <string>Nova Musica</string>
         </property>
@@ -108,6 +115,14 @@
           <width>69</width>
           <height>75</height>
          </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">#label_2{color: rgb(255, 255, 255)}</string>
         </property>
         <property name="text">
          <string>Nome</string>
@@ -151,6 +166,15 @@
           <height>16777215</height>
          </size>
         </property>
+        <property name="font">
+         <font>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">#label_3
+{color: rgb(255, 255, 255)}</string>
+        </property>
         <property name="text">
          <string>Artista(s)</string>
         </property>
@@ -193,6 +217,14 @@
           <height>16777215</height>
          </size>
         </property>
+        <property name="font">
+         <font>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">#label_5{color: rgb(255, 255, 255)}</string>
+        </property>
         <property name="text">
          <string>Genero</string>
         </property>
@@ -234,6 +266,14 @@
           <width>69</width>
           <height>16777215</height>
          </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">#label_4{color: rgb(255, 255, 255)}</string>
         </property>
         <property name="text">
          <string>Caminho</string>
@@ -278,6 +318,9 @@
      <width>151</width>
      <height>19</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">#batchAdd{color: rgb(255, 255, 255)}</string>
    </property>
    <property name="text">
     <string>Adicionar várias músicas</string>

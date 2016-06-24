@@ -13,6 +13,9 @@
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">#Config {background: url(:/imagens/backgorund.png);}</string>
+  </property>
   <widget class="QComboBox" name="comboBox">
    <property name="geometry">
     <rect>
@@ -61,6 +64,14 @@
      <width>69</width>
      <height>75</height>
     </size>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>13</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">#label_2{color: rgb(255, 255, 255)}</string>
    </property>
    <property name="text">
     <string>Idioma</string>
@@ -112,6 +123,14 @@
      <width>69</width>
      <height>75</height>
     </size>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">#label_3{color: rgb(255, 255, 255)}</string>
    </property>
    <property name="text">
     <string>Directoria</string>

@@ -19,6 +19,7 @@
 #include <QtSql>
 #include <QDir>
 #include <QStandardPaths>
+#include <QPushButton>
 
 #include "album.h"
 #include "playlist.h"
@@ -72,6 +73,8 @@ private slots:
     void on_repetir_clicked();
     void on_aleatorio_clicked();
     void on_btnAddPlay_clicked();
+
+    void on_playToggle_clicked();
 
 private:
     void updateAlbumList();
