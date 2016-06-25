@@ -22,18 +22,39 @@ Config::~Config()
     delete ui;
 }
 /*!
- * \brief Config::on_pushButton_clicked Procura directoria para guardar ficheiros
+ * \brief EditInfo::setData Altera dados de uma música
+ * \param path Variável do path utilizado
  */
-void Config::on_pushButton_clicked()
-{
-    QString mkdir = QFileDialog::getExistingDirectory(this,
-                                                      "Open Directory","C:/",
-                                                      QFileDialog::ShowDirsOnly
-                                                      | QFileDialog::DontResolveSymlinks);
-    ui->textEdit->setText(mkdir);
+void Config::setData(QString path){
+    ui->path->setText(path);
 }
 
-void Config::on_textEdit_objectNameChanged(const QString &objectName)
+QString Config::getData(){
+    return ui->path->text();
+}
+
+void Config::on_buttonBox_clicked(QAbstractButton *button)
 {
-  //  mkdir.show();
+    if(button->text() != "OK"){
+        this->done(QDialog::Rejected);
+        return;
+    }
+    if(ui->path->text() == ""){
+        QMessageBox::information(this, "Erro", "Falta preencher o caminho da diretoria");
+    }
+    else{
+        this->done(QDialog::Accepted);
+    }
+}
+/*!
+ * \brief Config::on_pushButton_clicked Procura directoria para guardar ficheiros
+ */
+void Config::on_browse_clicked()
+{
+
+    QString dir = QFileDialog::getExistingDirectory(this,
+                                    "Open Directory",ui->path->text(),
+                                    QFileDialog::ShowDirsOnly
+                                            | QFileDialog::DontResolveSymlinks);
+    ui->path->setText(dir);
 }

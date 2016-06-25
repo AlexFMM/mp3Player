@@ -5,6 +5,8 @@
   * \file config.h
 */
 #include <QDialog>
+#include <QFileDialog>
+#include <QMessageBox>
 
 namespace Ui {
 class Config;
@@ -19,11 +21,12 @@ class Config : public QDialog
 public:
     explicit Config(QWidget *parent = 0);
     ~Config();
+    void setData(QString);
+    QString getData();
 
 private slots:
-    void on_pushButton_clicked();
-
-    void on_textEdit_objectNameChanged(const QString &objectName);
+    void on_buttonBox_clicked(QAbstractButton *button);
+    void on_browse_clicked();
 
 private:
     Ui::Config *ui;

@@ -14,13 +14,11 @@ Musica::Musica()
 /*!
  * \brief Musica::Musica Construtor por parâmetro de uma música
  * \param nome Nome da música
- * \param file Ficheiro da música
  * \param artistas Artistas da música
  */
-Musica::Musica(QString nome, QString file, QList<QString> artistas)
+Musica::Musica(QString nome, QList<QString> artistas)
 {
     this->nome= nome;
-    this->fileName = file;
     this->artistas = artistas;
     this->genero = genero;
     this->dataDeAdicao = QDate::currentDate();
@@ -28,14 +26,12 @@ Musica::Musica(QString nome, QString file, QList<QString> artistas)
 /*!
  * \briefMusica::Musica Construtor por parâmetro de uma música
  * \param nome Nome da música
- * \param file Ficheiro da música
  * \param artistas Artistas da música
  * \param genero Género da música
  */
-Musica::Musica(QString nome, QString file, QList<QString> artistas, QString genero)
+Musica::Musica(QString nome, QList<QString> artistas, QString genero)
 {
     this->nome= nome;
-    this->fileName = file;
     this->artistas = artistas;
     this->genero = genero;
     this->dataDeAdicao = QDate::currentDate();
@@ -43,13 +39,11 @@ Musica::Musica(QString nome, QString file, QList<QString> artistas, QString gene
 /*!
  * \brief Musica::Construtor por parâmetro de uma música para vários artistas
  * \param nome Nome da música
- * \param file Ficheiro da música
  * \param artistas Artistas da música
  * \param genero Género da música
  */
-Musica::Musica(QString nome, QString file, QString artistas, QString genero){
+Musica::Musica(QString nome, QString artistas, QString genero){
     this->nome= nome;
-    this->fileName = file;
     this->genero = genero;
     this->artistas = artistas.split(", ");
     this->dataDeAdicao = QDate::currentDate();
@@ -57,14 +51,12 @@ Musica::Musica(QString nome, QString file, QString artistas, QString genero){
 /*!
  * \brief MConstrutor por parâmetro de uma música
  * \param nome Nome da música
- * \param file Ficheiro da música
  * \param artistas Artistas da música
  * \param genero Género da música
  * \param data Data de adição da música
  */
-Musica::Musica(QString nome, QString file, QString artistas, QString genero, QDate data){
+Musica::Musica(QString nome, QString artistas, QString genero, QDate data){
     this->nome= nome;
-    this->fileName = file;
     this->genero = genero;
     this->artistas = artistas.split(", ");
     this->dataDeAdicao = data;
@@ -75,12 +67,6 @@ Musica::Musica(QString nome, QString file, QString artistas, QString genero, QDa
  */
 void Musica::setNome(QString nome){
     this->nome = nome;
-}/*!
- * \brief Musica::setFileName Define o ficheiro da música
- * \param file Ficheiro da música
- */
-void Musica::setFileName(QString file){
-    this->fileName = file;
 }
 /*!
  * \brief Musica::setArtistas Define artistas da música
@@ -102,13 +88,6 @@ void Musica::setArtistas(QString artistas){
  */
 void Musica::setGenero(QString genero){
     this->genero = genero;
-}
-/*!
- * \brief Musica::getFileName Carrega nome do ficheiro da música
- * \return Retorna o nome do ficheiro da música
- */
-QString Musica::getFileName(){
-    return this->fileName;
 }
 /*!
  * \brief Musica::getName Carrega nome da música

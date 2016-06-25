@@ -19,6 +19,7 @@
 #include <QtSql>
 #include <QDir>
 #include <QStandardPaths>
+#include <QProgressDialog>
 
 #include "album.h"
 #include "playlist.h"
@@ -60,6 +61,7 @@ private slots:
     void dialogMusicFinished(int);
     void dialogEditFinished(int);
     void dialogPlayListFinished(int);
+    void dialogConfigFinished(int);
     void search();
     void on_actionAdicionarMusica_triggered();
     void on_actionAdicionarAlbum_triggered();

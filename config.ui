@@ -7,80 +7,17 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>300</height>
+    <height>141</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
-  <widget class="QComboBox" name="comboBox">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>40</y>
-     <width>141</width>
-     <height>22</height>
-    </rect>
-   </property>
-   <item>
-    <property name="text">
-     <string>Portuguese </string>
-    </property>
-   </item>
-   <item>
-    <property name="text">
-     <string>Spanish</string>
-    </property>
-   </item>
-   <item>
-    <property name="text">
-     <string>English</string>
-    </property>
-   </item>
-  </widget>
-  <widget class="QLabel" name="label_2">
-   <property name="enabled">
-    <bool>true</bool>
-   </property>
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>0</y>
-     <width>69</width>
-     <height>52</height>
-    </rect>
-   </property>
-   <property name="minimumSize">
-    <size>
-     <width>69</width>
-     <height>0</height>
-    </size>
-   </property>
-   <property name="maximumSize">
-    <size>
-     <width>69</width>
-     <height>75</height>
-    </size>
-   </property>
-   <property name="text">
-    <string>Idioma</string>
-   </property>
-  </widget>
-  <widget class="QTextEdit" name="textEdit">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>100</y>
-     <width>231</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="pushButton">
+  <widget class="QPushButton" name="browse">
    <property name="geometry">
     <rect>
      <x>260</x>
-     <y>100</y>
+     <y>50</y>
      <width>81</width>
      <height>21</height>
     </rect>
@@ -96,7 +33,7 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>60</y>
+     <y>10</y>
      <width>69</width>
      <height>52</height>
     </rect>
@@ -115,6 +52,29 @@
    </property>
    <property name="text">
     <string>Directoria</string>
+   </property>
+  </widget>
+  <widget class="QDialogButtonBox" name="buttonBox">
+   <property name="geometry">
+    <rect>
+     <x>220</x>
+     <y>110</y>
+     <width>166</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="standardButtons">
+    <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="path">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>50</y>
+     <width>231</width>
+     <height>21</height>
+    </rect>
    </property>
   </widget>
  </widget>
