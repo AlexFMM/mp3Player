@@ -74,6 +74,7 @@ private slots:
     void on_repetir_clicked();
     void on_aleatorio_clicked();
     void on_btnAddPlay_clicked();
+    void order();
 
 private:
     void updateAlbumList();
@@ -107,6 +108,7 @@ private:
     QStandardItemModel *tempPlay;
     QStandardItemModel *searchResults;
     QList<int> searchResultsIds;
+    QList<int> ordered;
     QList<QString> artistas;
     int selAlbum;
     int selPlay;

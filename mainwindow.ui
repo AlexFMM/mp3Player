@@ -432,7 +432,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QComboBox" name="viewChoice">
+       <widget class="QComboBox" name="orderChoice">
         <property name="minimumSize">
          <size>
           <width>150</width>
@@ -515,6 +515,9 @@
       <property name="usesScrollButtons">
        <bool>false</bool>
       </property>
+      <property name="tabsClosable">
+       <bool>false</bool>
+      </property>
       <widget class="QWidget" name="tabAlbuns">
        <attribute name="title">
         <string>Albuns</string>
@@ -555,11 +558,32 @@
        <attribute name="title">
         <string>Playlists</string>
        </attribute>
-       <widget class="QListView" name="listPlay">
+       <widget class="QTableView" name="listPlay">
         <property name="geometry">
          <rect>
           <x>0</x>
           <y>10</y>
+          <width>851</width>
+          <height>251</height>
+         </rect>
+        </property>
+        <property name="frameShape">
+         <enum>QFrame::NoFrame</enum>
+        </property>
+       </widget>
+      </widget>
+      <widget class="QWidget" name="tabResults">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <attribute name="title">
+        <string>Resultados</string>
+       </attribute>
+       <widget class="QTableView" name="listResults">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>0</y>
           <width>851</width>
           <height>251</height>
          </rect>

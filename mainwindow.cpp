@@ -55,33 +55,48 @@ MainWindow::MainWindow(QWidget *parent) :
     tempPlay = new QStandardItemModel();
     searchResults = new QStandardItemModel();
 
+    ui->Viewer->setCurrentIndex(0);
+    ui->Viewer->setTabEnabled(2,false);
+
     updateAlbumList();
     updatePlaylist();
     ui->listPlay->setModel(playModel);
-    ui->listPlay->setMovement(QListView::Static);
     ui->listPlay->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    ui->listPlay->horizontalHeader()->hide();
+    ui->listPlay->verticalHeader()->hide();
+    ui->listPlay->setSelectionBehavior(QAbstractItemView::SelectRows);
+    ui->listPlay->setShowGrid(false);
+
     ui->listObjs->setModel(albumModel);
     ui->listObjs->horizontalHeader()->hide();
     ui->listObjs->verticalHeader()->hide();
     ui->listObjs->setSelectionBehavior(QAbstractItemView::SelectRows);
-    //ui->listObjs->setViewMode(QListView::IconMode);
     ui->listObjs->setShowGrid(false);
-
     ui->listObjs->setIconSize(QSize(80, 80));
-    //ui->listObjs->setMovement(QListView::Static);
     ui->listObjs->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    ui->listObjs->resizeRowsToContents();
+    ui->listObjs->resizeRowsToContents();
+
+    ui->listResults->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    ui->listResults->setShowGrid(false);
+    ui->listResults->horizontalHeader()->hide();
+    ui->listResults->verticalHeader()->hide();
+    ui->listResults->setSelectionBehavior(QAbstractItemView::SelectRows);
+
     selAlbum = -1;
     selPlay = -1;
 
     ui->listObjs->setContextMenuPolicy(Qt::CustomContextMenu);
     ui->listPlay->setContextMenuPolicy(Qt::CustomContextMenu);
 
+
     ui->playToggle->setText("Play");
     ui->volumeSlider->setValue(100);
     ui->repetir->setText("Não repetir");
     ui->aleatorio->setText("Sequencial");
+    ui->songArtist->setText("Artista(s)");
+    ui->songName->setText("Música");
 
-    ui->songArtist->setText(folder);
 
     //connect the events
     connect(ui->playToggle,SIGNAL(clicked()),
@@ -124,6 +139,8 @@ MainWindow::MainWindow(QWidget *parent) :
                         this,SLOT(ProvideContextMenuPlay(const QPoint &)));
     connect(playlist, SIGNAL(currentIndexChanged(int)),
                         this, SLOT(changeInfo()));
+    connect(ui->orderChoice, SIGNAL(currentIndexChanged(int)),
+                        this, SLOT(order()));
 }
 /*!
  * \brief MainWindow::~MainWindow Eliminação da janela principal do programa
@@ -333,7 +350,7 @@ void MainWindow::changePlayLists(){
         selPlay = sel;
         updatePlaylistSongs(selPlay);
         ui->listPlay->setModel(tempPlay);
-        ui->listPlay->setViewMode(QListView::ListMode);
+        //ui->listPlay->setViewMode(QListView::ListMode);
     }
     else if(ui->listPlay->model() == tempPlay && selPlay != -1){
         ///Ignore the selection if the number is higher than the
@@ -343,7 +360,7 @@ void MainWindow::changePlayLists(){
         if(sel == 0){///if the item pressed is the first "back" go back to
                      ///list of all the albums
             ui->listPlay->setModel(playModel);
-            ui->listPlay->setViewMode(QListView::ListMode);
+            //ui->listPlay->setViewMode(QListView::ListMode);
             selPlay = -1;
             return;
         }
@@ -588,6 +605,7 @@ void MainWindow::updateAlbumList(){
         Items->setIcon(QPixmap(albuns[i]->getImagePath()));
         albumModel->appendRow(Items);
     }
+    ui->listObjs->resizeRowsToContents();
 }
 
 ///
@@ -598,6 +616,7 @@ void MainWindow::updatePlaylist(){
         Items = new QStandardItem(playlists[i]->getNome());
         playModel->appendRow(Items);
     }
+    ui->listObjs->resizeRowsToContents();
 }
 
 ///Update the list of songs to show in the main listView
@@ -651,6 +670,7 @@ void MainWindow::updateSongList(int alb){
                              + "\t" + albuns[alb]->songs.at(i)->getGenero());*/
         tempSong->appendRow(list);
     }
+    ui->listObjs->resizeRowsToContents();
 }
 
 ///Show the configuration form
@@ -778,18 +798,19 @@ void MainWindow::reloadPlaylists(){
 void MainWindow::search(){
     QString se = ui->searchBox->text();
     if(se.isEmpty()){
-        ui->listObjs->setModel(albumModel);
-        //ui->listObjs->setViewMode(QListView::IconMode);
+        ui->Viewer->setTabEnabled(2,false);
         selAlbum = -1;
         searchResultsIds.clear();
         return;
     }
     if(se.length() < 2)
         return;
+    ui->Viewer->setTabEnabled(2,true);
     QSqlQuery query;
     QSqlRecord record;
+    QList<QStandardItem*> list;
     int al, id;
-    QStandardItem *Items;
+
     query.prepare("SELECT * FROM Musica WHERE Name LIKE :st"
                                                 " OR Artists LIKE :st"
                                                 " OR DateAdded LIKE :st");
@@ -805,16 +826,18 @@ void MainWindow::search(){
         id = record.value(6).toInt();
         if(al < 0 || id < 0)
             return;
-        Items = new QStandardItem(albuns[al]->songs.at(id)->getName() + "\t"
-                            + albuns[al]->songs.at(id)->getArtistas()
-                            + "\t" + albuns[al]->songs.at(id)->getGenero()
-                            + "\t in the album " + albuns[al]->getNome());
-        searchResults->appendRow(Items);
+        list.clear();
+        list.append(new QStandardItem(albuns[al]->songs.at(id)->getName()));
+        list.append(new QStandardItem(albuns[al]->songs.at(id)->getArtistas()));
+        list.append(new QStandardItem(albuns[al]->songs.at(id)->getGenero()));
+        list.append(new QStandardItem("in the album " + albuns[al]->getNome()));
+
+        searchResults->appendRow(list);
         searchResultsIds.append(al);
         searchResultsIds.append(id);
     }
-    ui->listObjs->setModel(searchResults);
-    //ui->listObjs->setViewMode(QListView::ListMode);
+    ui->Viewer->setCurrentIndex(2);
+    ui->listResults->setModel(searchResults);
 }
 
 ///Create the context menu for the main listView
@@ -1288,17 +1311,20 @@ bool MainWindow::removeFromPlaylist(int p, int id){
 void MainWindow::updatePlaylistSongs(int p){
     tempPlay->clear();
     QStandardItem *Items;
+    QList<QStandardItem*>list;
+    QList<int> l;
     //Item to go back to the mais screen
     Items = new QStandardItem("Back");
     tempPlay->appendRow(Items);
     //List the songs of the Album
     int totSongs = playlists[p]->getTot();
     for(int i=0; i < totSongs; i++){
-        QList<int> l = playlists[p]->getSong(i);
-        Items = new QStandardItem(albuns[l[0]]->songs.at(l[1])->getName() + "\t"
-                             + albuns[l[0]]->songs.at(l[1])->getArtistas()
-                             + "\t" + albuns[l[0]]->songs.at(l[1])->getGenero());
-        tempPlay->appendRow(Items);
+        list.clear();
+        l = playlists[p]->getSong(i);
+        list.append(new QStandardItem(albuns[l[0]]->songs.at(l[1])->getName()));
+        list.append(new QStandardItem(albuns[l[0]]->songs.at(l[1])->getArtistas()));
+        list.append(new QStandardItem(albuns[l[0]]->songs.at(l[1])->getGenero()));
+        tempPlay->appendRow(list);
     }
 }
 
@@ -1505,4 +1531,6 @@ void MainWindow::dialogConfigFinished(int result){
     }
 }
 
-
+void MainWindow::order(){
+    int choice = ui->orderChoice->currentIndex();
+}
