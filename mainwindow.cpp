@@ -195,13 +195,16 @@ void MainWindow::play(){
  */
 void MainWindow::songEnd(){
     if(player->state() == QMediaPlayer::StoppedState){
-        ui->playToggle->setText("");
+        ui->playToggle->setText("");        
+        ui->playToggle->setIcon(QIcon(":/imagens/play.png"));
     }
     else if(player->state() == QMediaPlayer::PausedState){
         ui->playToggle->setText("");
+        ui->playToggle->setIcon(QIcon(":/imagens/play.png"));
     }
     else if(player->state() == QMediaPlayer::PlayingState){
         ui->playToggle->setText("");
+        ui->playToggle->setIcon(QIcon(":/imagens/pause.png"));
     }
 }
 /*!
