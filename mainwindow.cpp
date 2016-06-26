@@ -94,7 +94,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->listObjs->setModel(albumModel);
     ui->listObjs->horizontalHeader()->hide();
     ui->listObjs->verticalHeader()->hide();
-    ui->listObjs->setSelectionBehavior(QAbstractItemView::SelectRows);
+    ui->listObjs->setSelectionBehavior(QAbstractItemView::SelectItems);
     ui->listObjs->setShowGrid(false);
     ui->listObjs->setIconSize(QSize(80, 80));
     ui->listObjs->setEditTriggers(QAbstractItemView::NoEditTriggers);
@@ -142,6 +142,8 @@ MainWindow::MainWindow(QWidget *parent) :
                         this, SLOT(changeList()));
     connect(ui->listPlay, SIGNAL(clicked(QModelIndex)),
                         this, SLOT(changePlayLists()));
+    connect(ui->listResults, SIGNAL(clicked(QModelIndex)),
+                        this, SLOT(changeResults()));
     connect(addAlbum, SIGNAL(finished(int)),
                         this, SLOT(dialogAlbumFinished(int)));
     connect(addSong, SIGNAL(finished(int)),
@@ -310,24 +312,26 @@ void MainWindow::keyPressEvent(QKeyEvent *keyevent){
     }
 }
 
+void MainWindow::changeResults(){
+    int sel = ui->listResults->currentIndex().row();
+    int al = searchResultsIds.at(2*sel);
+    int id = searchResultsIds.at(2*sel+1);
+    player->stop();
+    playlist->clear();
+    QString file = folder + QDir::separator() + QString::number(al) + QDir::separator() + QString::number(id) + ".mp3";
+    playlist->addMedia(QUrl::fromLocalFile(file));
+    ui->songName->setText(albuns[al]->songs.at(id)->getName());
+    ui->songArtist->setText(albuns[al]->songs.at(id)->getArtistas());
+    ui->albumImage->setPixmap(QPixmap(albuns[al]->getImagePath()));
+    playList = false;
+    play();
+}
+
 ///Change the list used in the the main listView and handle
 ///The presses
 void MainWindow::changeList(){
     int sel=ui->listObjs->currentIndex().row();
-    if (ui->listObjs->model() == searchResults){
-        int al = searchResultsIds.at(2*sel);
-        int id = searchResultsIds.at(2*sel+1);
-        player->stop();
-        playlist->clear();
-        QString file = folder + QDir::separator() + QString::number(al) + QDir::separator() + QString::number(id);
-        playlist->addMedia(QUrl::fromLocalFile(file));
-        ui->songName->setText(albuns[al]->songs.at(id)->getName());
-        ui->songArtist->setText(albuns[al]->songs.at(id)->getArtistas());
-        ui->albumImage->setPixmap(QPixmap(albuns[al]->getImagePath()));
-        playList = false;
-        play();
-    }
-    else if(ui->listObjs->model() == tempSong && selAlbum != -1){
+    if(ui->listObjs->model() == tempSong && selAlbum != -1){
         ///Ignore the selection if the number is higher than the
         ///Total songs in the selected album
         if(sel-2 >= albuns[selAlbum]->songs.count())
@@ -335,6 +339,7 @@ void MainWindow::changeList(){
         if(sel == 0){///if the item pressed is the first "back" go back to
                      ///list of all the albums
             ui->listObjs->setModel(albumModel);
+            ui->listObjs->setSelectionBehavior(QAbstractItemView::SelectItems);
             //ui->listObjs->setViewMode(QListView::IconMode);
             selAlbum = -1;
             return;
@@ -366,7 +371,7 @@ void MainWindow::changeList(){
         selAlbum = sel;
         updateSongList(selAlbum);
         ui->listObjs->setModel(tempSong);
-        //ui->listObjs->setViewMode(QListView::ListMode);
+        ui->listObjs->setSelectionBehavior(QAbstractItemView::SelectRows);
     }
 }
 
@@ -629,12 +634,19 @@ void MainWindow::dialogEditFinished(int result){
 void MainWindow::updateAlbumList(){
     albumModel->clear();
     //List all the albums in stored
-    QStandardItem *Items;
+    QList<QStandardItem*> list;
     for(int i=0;i<albuns.count();i++){
-        Items = new QStandardItem(albuns[i]->getNome());
-        Items->setIcon(QPixmap(albuns[i]->getImagePath()));
-        albumModel->appendRow(Items);
+        list.append(new QStandardItem());
+        list[i%6]->setText(albuns[i]->getNome());
+        list[i%6]->setIcon(QPixmap(albuns[i]->getImagePath()));
+        if(list.count() == 6){
+            albumModel->appendRow(list);
+            list.clear();
+        }
     }
+    if(list.count() != 0)
+        albumModel->appendRow(list);
+    ui->listObjs->resizeColumnsToContents();
     ui->listObjs->resizeRowsToContents();
 }
 
@@ -1563,6 +1575,6 @@ void MainWindow::dialogConfigFinished(int result){
 }
 
 void MainWindow::order(){
-    int choice = ui->orderChoice->currentIndex();
+    //int choice = ui->orderChoice->currentIndex();
 }
 

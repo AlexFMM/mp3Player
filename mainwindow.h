@@ -77,6 +77,7 @@ private slots:
     void on_aleatorio_clicked();
     void on_btnAddPlay_clicked();
     void order();
+    void changeResults();
 
 private:
     void updateAlbumList();
