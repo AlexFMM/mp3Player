@@ -20,6 +20,7 @@
 #include <QDir>
 #include <QStandardPaths>
 #include <QProgressDialog>
+#include <QStyleFactory>
 
 #include "album.h"
 #include "playlist.h"

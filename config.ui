@@ -13,6 +13,11 @@
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">#Config{
+background: url(:/imagens/background.png)
+}</string>
+  </property>
   <widget class="QPushButton" name="browse">
    <property name="geometry">
     <rect>

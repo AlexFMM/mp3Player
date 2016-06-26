@@ -1,0 +1,16 @@
+<RCC>
+    <qresource prefix="/imagens">
+        <file>album.png</file>
+        <file>music.png</file>
+        <file>next.png</file>
+        <file>pause.png</file>
+        <file>play.png</file>
+        <file>plus.png</file>
+        <file>prev.png</file>
+        <file>repeat.png</file>
+        <file>repeat_one.png</file>
+        <file>shuffle.png</file>
+        <file>background.png</file>
+        <file>sequential.png</file>
+    </qresource>
+</RCC>

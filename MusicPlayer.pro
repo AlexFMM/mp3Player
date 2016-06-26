@@ -43,3 +43,6 @@ FORMS    += mainwindow.ui \
 QT += core gui multimedia sql
 
 DISTFILES +=
+
+RESOURCES += \
+    images.qrc

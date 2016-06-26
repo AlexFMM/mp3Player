@@ -18,7 +18,9 @@
     <normaloff>icon.png</normaloff>icon.png</iconset>
   </property>
   <property name="styleSheet">
-   <string notr="true"/>
+   <string notr="true">#MainWindow{
+background: url(:/imagens/background.png)
+}</string>
   </property>
   <property name="tabShape">
    <enum>QTabWidget::Rounded</enum>
@@ -95,6 +97,10 @@
             <property name="text">
              <string>Prev</string>
             </property>
+            <property name="icon">
+             <iconset resource="images.qrc">
+              <normaloff>:/imagens/prev.png</normaloff>:/imagens/prev.png</iconset>
+            </property>
            </widget>
           </item>
           <item>
@@ -140,6 +146,10 @@
                 </property>
                 <property name="text">
                  <string>Repetir</string>
+                </property>
+                <property name="icon">
+                 <iconset resource="images.qrc">
+                  <normaloff>:/imagens/repeat.png</normaloff>:/imagens/repeat.png</iconset>
                 </property>
                </widget>
               </item>
@@ -196,6 +206,10 @@
                 </property>
                 <property name="text">
                  <string>Play/Pause</string>
+                </property>
+                <property name="icon">
+                 <iconset resource="images.qrc">
+                  <normaloff>:/imagens/play.png</normaloff>:/imagens/play.png</iconset>
                 </property>
                </widget>
               </item>
@@ -256,6 +270,10 @@
                 <property name="text">
                  <string>Aleatório</string>
                 </property>
+                <property name="icon">
+                 <iconset resource="images.qrc">
+                  <normaloff>:/imagens/sequential.png</normaloff>:/imagens/sequential.png</iconset>
+                </property>
                </widget>
               </item>
               <item>
@@ -298,6 +316,10 @@
             </property>
             <property name="text">
              <string>Next</string>
+            </property>
+            <property name="icon">
+             <iconset resource="images.qrc">
+              <normaloff>:/imagens/next.png</normaloff>:/imagens/next.png</iconset>
             </property>
            </widget>
           </item>
@@ -483,6 +505,10 @@
         <property name="text">
          <string>Adicionar Album</string>
         </property>
+        <property name="icon">
+         <iconset resource="images.qrc">
+          <normaloff>:/imagens/plus.png</normaloff>:/imagens/plus.png</iconset>
+        </property>
        </widget>
       </item>
       <item>
@@ -490,12 +516,20 @@
         <property name="text">
          <string>Adicionar Playlist</string>
         </property>
+        <property name="icon">
+         <iconset resource="images.qrc">
+          <normaloff>:/imagens/plus.png</normaloff>:/imagens/plus.png</iconset>
+        </property>
        </widget>
       </item>
       <item>
        <widget class="QPushButton" name="btnAddSong">
         <property name="text">
          <string>Adicionar Musica</string>
+        </property>
+        <property name="icon">
+         <iconset resource="images.qrc">
+          <normaloff>:/imagens/plus.png</normaloff>:/imagens/plus.png</iconset>
         </property>
        </widget>
       </item>
@@ -603,7 +637,7 @@
      <x>0</x>
      <y>0</y>
      <width>874</width>
-     <height>20</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFicheiro">
@@ -710,7 +744,9 @@
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <resources/>
+ <resources>
+  <include location="images.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>actionExit</sender>
