@@ -21,6 +21,7 @@
 #include <QStandardPaths>
 #include <QProgressDialog>
 #include <QStyleFactory>
+#include <QPixmap>
 
 #include "album.h"
 #include "playlist.h"

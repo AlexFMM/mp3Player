@@ -111,12 +111,12 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->listPlay->setContextMenuPolicy(Qt::CustomContextMenu);
 
 
-    ui->playToggle->setText("Play");
+    ui->playToggle->setText("");
     ui->volumeSlider->setValue(100);
-    ui->repetir->setText("Não repetir");
-    ui->aleatorio->setText("Sequencial");
-    ui->songArtist->setText("Artista(s)");
-    ui->songName->setText("Música");
+    ui->repetir->setText("");
+    ui->aleatorio->setText("");
+    ui->songArtist->setText("");
+    ui->songName->setText("");
 
 
     //connect the events
@@ -195,13 +195,13 @@ void MainWindow::play(){
  */
 void MainWindow::songEnd(){
     if(player->state() == QMediaPlayer::StoppedState){
-        ui->playToggle->setText("Play");
+        ui->playToggle->setText("");
     }
     else if(player->state() == QMediaPlayer::PausedState){
-        ui->playToggle->setText("Play");
+        ui->playToggle->setText("");
     }
     else if(player->state() == QMediaPlayer::PlayingState){
-        ui->playToggle->setText("Pause");
+        ui->playToggle->setText("");
     }
 }
 /*!
@@ -1407,15 +1407,15 @@ void MainWindow::on_repetir_clicked()
     int rep = playlist->playbackMode();
     if(rep == QMediaPlaylist::CurrentItemOnce){
         playlist->setPlaybackMode(QMediaPlaylist::CurrentItemInLoop);
-        ui->repetir->setText("Repetir uma");
+        ui->repetir->setText("");
     }
     else if(rep == QMediaPlaylist::CurrentItemInLoop){
         playlist->setPlaybackMode(QMediaPlaylist::Loop);
-        ui->repetir->setText("Repetir Todas");
+        ui->repetir->setText("");
     }
     else if(rep == QMediaPlaylist::Loop){
         playlist->setPlaybackMode(QMediaPlaylist::CurrentItemOnce);
-        ui->repetir->setText("Não repetir");
+        ui->repetir->setText("");
     }
     else if(rep == QMediaPlaylist::Random){}
     else
@@ -1452,7 +1452,7 @@ void MainWindow::on_aleatorio_clicked()
     if(rep != QMediaPlaylist::Random){
         prevMode = playlist->playbackMode();
         playlist->setPlaybackMode(QMediaPlaylist::Random);
-        ui->aleatorio->setText("Aleatório");
+        ui->aleatorio->setText("");
     }
     else{
         switch (prevMode) {
@@ -1466,7 +1466,7 @@ void MainWindow::on_aleatorio_clicked()
         default:
             break;
         }
-        ui->aleatorio->setText("Sequencial");
+        ui->aleatorio->setText("");
     }
 }
 /*!

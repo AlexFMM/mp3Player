@@ -95,7 +95,7 @@ background: url(:/imagens/background.png)
              </sizepolicy>
             </property>
             <property name="text">
-             <string>Prev</string>
+             <string/>
             </property>
             <property name="icon">
              <iconset resource="images.qrc">
@@ -145,7 +145,7 @@ background: url(:/imagens/background.png)
                  </sizepolicy>
                 </property>
                 <property name="text">
-                 <string>Repetir</string>
+                 <string/>
                 </property>
                 <property name="icon">
                  <iconset resource="images.qrc">
@@ -204,8 +204,11 @@ background: url(:/imagens/background.png)
                   <verstretch>0</verstretch>
                  </sizepolicy>
                 </property>
+                <property name="styleSheet">
+                 <string notr="true"/>
+                </property>
                 <property name="text">
-                 <string>Play/Pause</string>
+                 <string/>
                 </property>
                 <property name="icon">
                  <iconset resource="images.qrc">
@@ -268,7 +271,7 @@ background: url(:/imagens/background.png)
                  </sizepolicy>
                 </property>
                 <property name="text">
-                 <string>Aleatório</string>
+                 <string/>
                 </property>
                 <property name="icon">
                  <iconset resource="images.qrc">
@@ -315,7 +318,7 @@ background: url(:/imagens/background.png)
              </sizepolicy>
             </property>
             <property name="text">
-             <string>Next</string>
+             <string/>
             </property>
             <property name="icon">
              <iconset resource="images.qrc">
