@@ -121,6 +121,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->songArtist->setText("");
     ui->songName->setText("");
 
+    playlist->setPlaybackMode(QMediaPlaylist::CurrentItemOnce);
 
     //connect the events
     connect(ui->playToggle,SIGNAL(clicked()),
@@ -463,14 +464,15 @@ void MainWindow::dialogAlbumFinished(int result){
         else{//Else use a placeHolder image
             /////////////////////TO BE ADDED
             //Create the new object Album
-            albuns.append(new Album(list[0], list[1]));
+            QString placeHolder = ":/imagens/album.png";
+            albuns.append(new Album(list[0], list[1], placeHolder));
             QSqlQuery query;
             //Insert the information in the database
             query.prepare("INSERT INTO Albuns (Name, Description, ImagePath) "
                           "VALUES (:n, :d, :i)");
             query.bindValue(":n", list[0]);
             query.bindValue(":d", list[1]);
-            query.bindValue(":i", "");
+            query.bindValue(":i", placeHolder);
             query.exec();
         }
         QDir().mkdir(folder + QDir::separator() +
@@ -1467,6 +1469,7 @@ void MainWindow::on_aleatorio_clicked()
             break;
         case 1:
             playlist->setPlaybackMode(QMediaPlaylist::CurrentItemInLoop);
+            break;
         case 3:
             playlist->setPlaybackMode(QMediaPlaylist::Loop);
         default:
