@@ -15,7 +15,7 @@ Album::Album(QString nome, QString descricao)
 {
     this->nome= nome;
     this->descricao = descricao;
-    this->imageFile = "";
+    this->imageFile = ":/imagens/album.png";
 }
 /*!
  * \brief Album::Album Construtor por parâmetros de um álbum
