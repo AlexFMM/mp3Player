@@ -12,7 +12,10 @@
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
-{   qApp->setStyle(QStyleFactory::create("Fusion"));
+{
+    //ui->orderChoice->setEnabled(false);
+
+    qApp->setStyle(QStyleFactory::create("Fusion"));
 
     QPalette darkPalette;
     darkPalette.setColor(QPalette::Window, QColor(53,53,53));
@@ -1410,15 +1413,15 @@ void MainWindow::on_repetir_clicked()
     int rep = playlist->playbackMode();
     if(rep == QMediaPlaylist::CurrentItemOnce){
         playlist->setPlaybackMode(QMediaPlaylist::CurrentItemInLoop);
-        ui->repetir->setText("");
+        ui->repetir->setIcon(QIcon(":/imagens/repeat.png"));
     }
     else if(rep == QMediaPlaylist::CurrentItemInLoop){
         playlist->setPlaybackMode(QMediaPlaylist::Loop);
-        ui->repetir->setText("");
+        ui->repetir->setIcon(QIcon(":/imagens/repeat_one.png"));
     }
     else if(rep == QMediaPlaylist::Loop){
         playlist->setPlaybackMode(QMediaPlaylist::CurrentItemOnce);
-        ui->repetir->setText("");
+        ui->repetir->setIcon(QIcon(":/imagens/repeat_td.png"));
     }
     else if(rep == QMediaPlaylist::Random){}
     else
@@ -1455,7 +1458,7 @@ void MainWindow::on_aleatorio_clicked()
     if(rep != QMediaPlaylist::Random){
         prevMode = playlist->playbackMode();
         playlist->setPlaybackMode(QMediaPlaylist::Random);
-        ui->aleatorio->setText("");
+        ui->aleatorio->setIcon(QIcon(":/imagens/shuffle.png"));
     }
     else{
         switch (prevMode) {
@@ -1469,7 +1472,7 @@ void MainWindow::on_aleatorio_clicked()
         default:
             break;
         }
-        ui->aleatorio->setText("");
+        ui->aleatorio->setIcon(QIcon(":/imagens/sequential.png"));
     }
 }
 /*!
